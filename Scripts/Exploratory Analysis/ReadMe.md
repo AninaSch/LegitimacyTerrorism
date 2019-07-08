@@ -1,3 +1,4 @@
 # Read Me: 
 
+AnalysisGTDPolity4.R IS NOT WORKING YET. NEED TO BE REFRESHED FOR THIS REPO.
 ...
