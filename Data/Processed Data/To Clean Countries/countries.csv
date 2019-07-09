@@ -1,4 +1,4 @@
-country,new_country
+country,consolidated_country
 Afghanistan,Afghanistan
 Albania,Albania
 Algeria,Algeria
@@ -37,8 +37,8 @@ Chile,Chile
 China,China
 Colombia,Colombia
 Comoros,Comoros
-Congo Brazzaville,Congo
-Congo Kinshasa,Congo RDC
+Congo Brazzaville,Congo Republic
+Congo Kinshasa,Congo DRC
 Cote D'Ivoire,Ivory Coast
 Costa Rica,Costa Rica
 Croatia,Croatia
@@ -46,7 +46,7 @@ Cuba,Cuba
 Cyprus,Cyprus
 Czech Republic,Czech Republic
 Czechoslovakia,Czechoslovakia
-Democratic Republic of the Congo,Congo RDC
+Democratic Republic of the Congo,Congo DRC
 Denmark,Denmark
 Djibouti,Djibouti
 Dominica,Dominica
@@ -151,7 +151,7 @@ Philippines,Philippines
 Poland,Poland
 Portugal,Portugal
 Qatar,Qatar
-Republic of the Congo,Congo
+Republic of the Congo,Congo Republic
 Rhodesia,Rhodesia
 Romania,Romania
 Russia,Russia
@@ -207,7 +207,7 @@ Uzbekistan,Uzbekistan
 Vanuatu,Vanuatu
 Vatican City,Vatican City
 Venezuela,Venezuela
-Vietnam North,Vietnam
+Vietnam North,North Vietnam
 Vietnam South,South Vietnam
 Vietnam,Vietnam
 Wallis and Futuna,Wallis and Futuna
@@ -216,9 +216,9 @@ West Germany (FRG),West Germany (FRG)
 Germany West,West Germany (FRG)
 Western Sahara,Western Sahara
 Yemen,Yemen
-Yemen North,Yemen
-Yemen South,Yemen
+Yemen North,North Yemen
+Yemen South,South Yemen
 Yugoslavia,Yugoslavia
-Zaire,Zaire
+Zaire,Congo DRC
 Zambia,Zambia
 Zimbabwe,Zimbabwe
