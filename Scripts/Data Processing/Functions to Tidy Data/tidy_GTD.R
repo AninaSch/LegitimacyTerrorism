@@ -60,6 +60,7 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   # note that this assumes that there were no event in this country in this year, and not that no data was collected...
   # (note also: the countries without any terrorism event in the given years are not included (and not in GTD))
   
+  print("TOTHINK: do we need fatalities too?")
   
   #     3. Fill the dataset with years without events
   
