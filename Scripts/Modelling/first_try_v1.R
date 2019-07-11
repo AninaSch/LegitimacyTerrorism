@@ -4,12 +4,11 @@
 library(tidyverse)
 library(pglm) # model panel data
 
-my_data <- readRDS("../../Data/Data for Modelling/first_dataset_to_try.rds")
+my_data <- readRDS("../../Data/Data for Modelling/GTD_polity_PENN.rds")
 
 # for now, just remove all the polity score larger than 10 (absolute value)
 # (this should be done in tidy_Polity4.R)
-my_data <- my_data %>% filter(abs(polity) < 11) # ! we go from 9841 row to 6999
-
+my_data <- my_data %>% filter(abs(polity) < 11) # ! we go from 5282 row to 5088
 
 # ---------------- Try a logistic regression
 
@@ -25,10 +24,16 @@ pdata <- pdata.frame(my_data, index = c("consolidated_country", "year")) # not n
 # summary(Y)
 # summary(X)
 
+
+# NEED STANDARDIZATION
+
+
 # random effect estimator (CORRECT ONE?)
-log_reg <- pglm(formula = had_events ~ polity, data = pdata, estimator = "random", family = 'binomial')
+log_reg <- pglm(formula = had_events ~ exrec + exconst + polcomp + durable + GDP_expentiture + pop, 
+                data = pdata, estimator = "random", family = 'binomial')
 summary(log_reg)
 # TO DO: handle the warning of pglm
+# TO DO: choose correct estimator/model: "pooling", "within", "between", "random"
 
 
 
@@ -51,5 +56,13 @@ summary(neg_bin)
 
 # use pglm (generalized lm -> neg bin and logit)
 # https://cran.r-project.org/web/packages/pglm/pglm.pdf
+
+
+
+library(lme4)
+# https://cran.r-project.org/web/packages/lme4/index.html
+# https://www.jaredknowles.com/journal/2013/11/25/getting-started-with-mixed-effect-models-in-r
+# glmer(formula, data = , family = 'binomial')...
+
 
 

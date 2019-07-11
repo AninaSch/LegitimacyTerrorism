@@ -38,11 +38,16 @@ Central African Republic,Central African Republic
 Chad,Chad
 Chile,Chile
 China,China
+"China, Hong Kong SAR ",China
+"China, Macao SAR",China
 Colombia,Colombia
 Comoros,Comoros
 Congo Brazzaville,Congo Republic
+Congo  ,Congo Republic
 Congo Kinshasa,Congo DRC
+D.R. of the Congo,Congo DRC
 Cote D'Ivoire,Ivory Coast
+C™te d'Ivoire ,Ivory Coast
 Costa Rica,Costa Rica
 Croatia,Croatia
 Cuba,Cuba
@@ -92,9 +97,11 @@ India,India
 Indonesia,Indonesia
 International,International
 Iran,Iran
+Iran (Islamic Republic of)   ,Iran
 Iraq,Iraq
 Ireland,Ireland
 Israel,Israel
+State of Palestine ,Israel
 Italy,Italy
 Ivory Coast,Ivory Coast
 Jamaica,Jamaica
@@ -106,6 +113,7 @@ Kosovo,Kosovo
 Kuwait,Kuwait
 Kyrgyzstan,Kyrgyzstan
 Laos,Laos
+Lao People's DR  ,Laos
 Latvia,Latvia
 Lebanon,Lebanon
 Lesotho,Lesotho
@@ -114,7 +122,8 @@ Libya,Libya
 Lithuania,Lithuania
 Luxembourg,Luxembourg
 Macau,Macau
-Macedonia,Macedonia
+Macedonia,North Macedonia 
+North Macedonia ,North Macedonia 
 Madagascar,Madagascar
 Malawi,Malawi
 Malaysia,Malaysia
@@ -126,6 +135,7 @@ Mauritania,Mauritania
 Mauritius,Mauritius
 Mexico,Mexico
 Moldova,Moldova
+Republic of Moldova,Moldova
 Montenegro,Montenegro
 Morocco,Morocco
 Mozambique,Mozambique
@@ -158,6 +168,7 @@ Republic of the Congo,Congo Republic
 Rhodesia,Rhodesia
 Romania,Romania
 Russia,Russia
+Russian Federation ,Russia
 Rwanda,Rwanda
 Saudi Arabia,Saudi Arabia
 Senegal,Senegal
@@ -168,12 +179,14 @@ Seychelles,Seychelles
 Sierra Leone,Sierra Leone
 Singapore,Singapore
 Slovak Republic,Slovak Republic
+Slovakia ,Slovak Republic
 Slovenia,Slovenia
 Solomon Islands,Solomon Islands
 Somalia,Somalia
 South Africa,South Africa
 Korea South,South Korea
 South Korea,South Korea
+Republic of Korea ,South Korea
 South Sudan,South Sudan
 South Vietnam,South Vietnam
 South Yemen,South Yemen
@@ -182,6 +195,7 @@ Soviet Union,Soviet Union
 Spain,Spain
 Sri Lanka,Sri Lanka
 St. Kitts and Nevis,St. Kitts and Nevis
+Saint Kitts and Nevis,St. Kitts and Nevis
 St. Lucia,St. Lucia
 Sudan-North,Sudan
 Sudan,Sudan
@@ -190,9 +204,11 @@ Swaziland,Swaziland
 Sweden,Sweden
 Switzerland,Switzerland
 Syria,Syria
+Syrian Arab Republic ,Syria
 Taiwan,Taiwan
 Tajikistan,Tajikistan
 Tanzania,Tanzania
+U.R. of Tanzania: Mainland,Tanzania
 Thailand,Thailand
 Togo,Togo
 Trinidad and Tobago,Trinidad and Tobago
@@ -210,9 +226,11 @@ Uzbekistan,Uzbekistan
 Vanuatu,Vanuatu
 Vatican City,Vatican City
 Venezuela,Venezuela
+Venezuela (Bolivarian Republic of),Venezuela
 Vietnam North,North Vietnam
 Vietnam South,South Vietnam
 Vietnam,Vietnam
+Viet Nam,Vietnam
 Wallis and Futuna,Wallis and Futuna
 West Bank and Gaza Strip,West Bank and Gaza Strip
 West Germany (FRG),West Germany (FRG)

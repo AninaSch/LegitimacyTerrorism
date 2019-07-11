@@ -34,6 +34,6 @@ tidy_WVS(path_loadoriginal, path_savetidy) # import original, clean, tidy, save 
 # --- 4. tidy Penn:
 source("Functions to Tidy Data/tidy_PENN.R")
 path_loadoriginal = "../../Data/Original Data/PENNWorldTable/pwt91new.xlsx"
-path_savetidy = "../../Data/Processed Data/WVS_PENN.rds"
+path_savetidy = "../../Data/Processed Data/PENN_tidy.rds"
 tidy_PENN(path_loadoriginal, path_savetidy) # import original, clean, tidy, save in processed data
 
