@@ -51,8 +51,8 @@ anb <- pglm(had_events ~ exrec + exconst + polcomp, my_data, family = binomial('
 summary(anb)
 
 ## legitimacy measures + controls. Once I add GDP 
-anb <- pglm(had_events ~ exrec + exconst + polcomp + durable + GDP_expentiture + pop , my_data, family = binomial('probit'),
-            model = "pooling",  method = "bfgs", print.level = 3, R = 5)
+anb <- pglm(had_events ~ exrec + exconst + polcomp + durable + GDP_expentiture + pop , my_data, family = binomial('logit'),
+            model = "within",  method = "bfgs", print.level = 3, R = 5)
 summary(anb)
 
 
@@ -77,15 +77,19 @@ summary(la)
 
 #  legitimacy + controls
 
+my_data <- my_data %>% filter(abs(polity) < 11) # ! we go from 5282 row to 5088
+
+
+la <- pglm(n_events ~ polity + durable + log(GDP_expentiture) + log(pop),  my_data,
+           family = negbin(link="log"), model = "within", print.level = 3, method = "nr",
+           index = c('consolidated_country', 'year'))
+
 la <- pglm(n_events ~ exrec + exconst + polcomp + durable + log(GDP_expentiture) + log(pop),  my_data,
-           family = negbin, model = "within", print.level = 3, method = "nr",
+           family = negbin(link="log"), model = "within", print.level = 3, method = "nr",
            index = c('consolidated_country', 'year'))
 summary(la)
 
-la <- pglm(n_events ~ lag(log(rd), 0:5) + scisect + log(GDP_expentiture) + log(pop) + factor(year), PatentsRDUS,
-           family = negbin, model = "within", print.level = 3, method = "nr",
-           index = c('consolidated_country', 'year'))
-summary(la)
+
 
 
 # la <- pglm(patents ~ lag(log(rd), 0:5) + scisect + log(capital72) + factor(year), PatentsRDUS,
