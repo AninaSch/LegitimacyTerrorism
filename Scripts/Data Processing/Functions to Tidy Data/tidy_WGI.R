@@ -19,45 +19,45 @@
 
 # set working direcotry 
 
-setwd("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Scripts/Data Processing/Functions to Tidy Data")
-getwd()
+# setwd("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Scripts/Data Processing/Functions to Tidy Data")
+# getwd()
 
-# tidy_WGI <- function(path_loadoriginal, path_savetidy){
-
-
-# 1. ACCOUNTABILITY  
-#   read WGI account Data
+tidy_WGI <- function(path_loadoriginal, path_savetidy){
+  
+  
+  # 1. ACCOUNTABILITY  
+  #   read WGI account Data
   print("importing WGI account data... ")
-  # WGI_account <- rio::import(path_loadoriginal)
+  WGI_account <- rio::import(path_loadoriginal)
   # WGI_account <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
-  WGI_account <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
-
-glimpse(WGI_account)
-print("importing done")
-
-# extract columns "estimates" as a data table
-WGI_accountsub <- WGI_account %>% select(1, 2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92, 98, 104, 110)
-
-# delete first row
-WGI_accountsub = WGI_accountsub[-1,]
-
-# label first colum: country
-names(WGI_accountsub)[1]<-"country"
-
-# reshape data
-WGI_accounttidy <- WGI_accountsub %>% 
-  gather("year", "estimates", 2:20) %>%
-  arrange(country, year) %>%
-  mutate(
-    year = str_sub(year, start = 1, end = 4),
-    country = as.factor(country)
+  # WGI_account <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
+  
+  glimpse(WGI_account)
+  print("importing done")
+  
+  # extract columns "estimates" as a data table
+  WGI_accountsub <- WGI_account %>% select(1, 2, 8, 14, 20, 26, 32, 38, 44, 50, 56, 62, 68, 74, 80, 86, 92, 98, 104, 110)
+  
+  # delete first row
+  WGI_accountsub = WGI_accountsub[-1,]
+  
+  # label first colum: country
+  names(WGI_accountsub)[1]<-"country"
+  
+  # reshape data
+  WGI_accounttidy <- WGI_accountsub %>% 
+    gather("year", "accountability", 2:20) %>%
+    arrange(country, year) %>%
+    mutate(
+      year = str_sub(year, start = 1, end = 4),
+      country = as.factor(country)
     )
   
   print("WGI_accounttidy done")
   
-
-# 2. POLITICAL STABILITY  
-#  read WGI political stability data
+  
+  # 2. POLITICAL STABILITY  
+  #  read WGI political stability data
   print("importing WGI stability data... ")
   # WGI_stability <- rio::import(path_loadoriginal)
   # WGI_stability <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_stability.xlsx") # for debugging
@@ -77,7 +77,7 @@ WGI_accounttidy <- WGI_accountsub %>%
   
   # reshape data
   WGI_stabilitytidy <- WGI_stabilitysub %>% 
-    gather("year", "estimates", 2:20) %>%
+    gather("year", "stability", 2:20) %>%
     arrange(country, year) %>%
     mutate(
       year = str_sub(year, start = 1, end = 4),
@@ -85,11 +85,11 @@ WGI_accounttidy <- WGI_accountsub %>%
     )
   
   print("WGI_stabilitytidy done")
-
   
- # 3. GOVERNMENT EFFECTIVENESS
+  
+  # 3. GOVERNMENT EFFECTIVENESS
   #  read WGI government effectiveness data
-print("importing WGI stability data... ")
+  print("importing WGI stability data... ")
   # WGI_effect <- rio::import(path_loadoriginal)
   # WGI_effect <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_effect.xlsx") # for debugging
   WGI_effect <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_effect.xlsx") # for debugging
@@ -108,7 +108,7 @@ print("importing WGI stability data... ")
   
   # reshape data
   WGI_effecttidy <- WGI_effectsub %>% 
-    gather("year", "estimates", 2:20) %>%
+    gather("year", "effectiveness", 2:20) %>%
     arrange(country, year) %>%
     mutate(
       year = str_sub(year, start = 1, end = 4),
@@ -138,7 +138,7 @@ print("importing WGI stability data... ")
   
   # reshape data
   WGI_qualitytidy <- WGI_qualitysub %>% 
-    gather("year", "estimates", 2:20) %>%
+    gather("year", "quality", 2:20) %>%
     arrange(country, year) %>%
     mutate(
       year = str_sub(year, start = 1, end = 4),
@@ -168,7 +168,7 @@ print("importing WGI stability data... ")
   
   # reshape data
   WGI_rulelawtidy <- WGI_rulelawsub %>% 
-    gather("year", "estimates", 2:20) %>%
+    gather("year", "rule_of_law", 2:20) %>%
     arrange(country, year) %>%
     mutate(
       year = str_sub(year, start = 1, end = 4),
@@ -176,8 +176,8 @@ print("importing WGI stability data... ")
     )
   
   print("WGI_rulelawtidy done")
-
-
+  
+  
   # 5. CONTROL OF CORRUPTION
   #  read WGI control of corruption data data
   print("importing WGI control of corruption data... ")
@@ -199,7 +199,7 @@ print("importing WGI stability data... ")
   
   # reshape data
   WGI_corruptiontidy <- WGI_corruptionsub %>% 
-    gather("year", "estimates", 2:20) %>%
+    gather("year", "corruption", 2:20) %>%
     arrange(country, year) %>%
     mutate(
       year = str_sub(year, start = 1, end = 4),
@@ -208,23 +208,26 @@ print("importing WGI stability data... ")
   
   print("WGI_corruptiontidy done")  
   
+  # Merge all WGI estimates together:
+  WGI_tidy <- full_join(WGI_accounttidy, WGI_corruptiontidy) %>%
+    full_join(., WGI_effecttidy) %>%
+    full_join(., WGI_qualitytidy) %>%
+    full_join(., WGI_rulelawtidy) %>%
+    full_join(., WGI_stabilitytidy)
   
-  # handle special countries:
-  # as we match to GTD, we should have the same countries as there.
-  # this is not about spelling, spelling is handled in Data/Processed Data/To Clean Countries/countries.csv
-  # but about the different splits of the countries.
+  # replace all character NA by true NA:
+  WGI_tidy[WGI_tidy=="#N/A"] <- NA
   
-  # e.g. GTD has no distinction btw north and south Yemem. Polity does before 1990
-  # so we cuold average Yemen scores by year in Polity before 1990 and rename country as Yemen
-
+  # set the estimates as numeric instead of characters:
+  WGI_tidy <- WGI_tidy %>%
+    mutate_at(c("year", "accountability", "corruption", "effectiveness", 
+                "quality", "rule_of_law", "stability"), as.numeric)
+    
   # TO DO:
   # NEED TO HANDLE SPECIAL COUNTRIES. currentloy those are dropped when merging with GTD...
-  print("TO DO: HANDLE SPECIAL COUNTRIES (north/south Yemen, Vietnam, Soudan...)")
+  print("TO DO: HANDLE SPECIAL COUNTRIES (Syrian Arab Republic, -Venezuela, RB-, Soudan...)")
   
-  # TO DO:
-  # NEED TO HANDLE HERE THE SPECIAL CASES, WHEN THE SCORES ARE -77, -66 etc.
-  print("TO DO: HANDLE SPECIAL SCORES (-66, -77, -99...)")
-
+  
   saveRDS(WGI_tidy, file = path_savetidy)
   print("processed WGI data saved")
   

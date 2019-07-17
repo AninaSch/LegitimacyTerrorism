@@ -13,6 +13,12 @@ GTD <- readRDS("../../Data/Processed Data/GTD_tidy.rds")
 polity <- readRDS("../../Data/Processed Data/polity_tidy.rds")
 PENN <- readRDS("../../Data/Processed Data/PENN_tidy.rds")
 
+PRIO <- readRDS("../../Data/Processed Data/PRIO_tidy.rds")
+
+WGI <- readRDS("../../Data/Processed Data/WGI_tidy.rds")
+
+WVS <- readRDS("../../Data/Processed Data/WVS_tidy.rds")
+
 
 # --- 2. Clean Countries Before Merging
 
@@ -22,7 +28,7 @@ polity <- clean_countries(polity, path_to_country_dictionary)
 PENN <- clean_countries(PENN, path_to_country_dictionary)
 
 
-# --- 3. Merging Datasets
+# --- 3. Merging Datasets Polity_Penn_Prio
 
 # --- we start by merging polity to GTD:
 # we do an left join, as we do not want countries that are not in the GTD (true? we could also set n_events to 0 for those?)
@@ -32,6 +38,8 @@ GTD_polity <- left_join(GTD, polity, by = c("consolidated_country", "year")) %>%
 # --- then we merge PENN to GTD_polity:
 GTD_polity_PENN <- left_join(GTD_polity, PENN, by = c("consolidated_country", "year")) %>%
   arrange(consolidated_country)
+
+
 
 
 
