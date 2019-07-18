@@ -83,8 +83,9 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
     filter(
       year >= 1970
     ) %>%
-    mutate(country = as.factor(country)) %>%
-    arrange(country, year)
+    arrange(country, year) %>%
+    mutate(country = as.factor(country))
+    
   
   # table(WVS_tidy$trust_others)
   # table(WVS_tidy$importance_politics)
@@ -102,7 +103,8 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
       std_trust_others = sd(trust_others, na.rm=TRUE),
       std_importance_politics = sd(importance_politics, na.rm=TRUE),
       std_interest_politics1 = sd(interest_politics1, na.rm=TRUE)
-    )
+    ) %>%
+    arrange()
     print("tidying done")
   
 
@@ -111,3 +113,8 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   print("processed WVS data saved")
   
 }
+
+
+# Look up countries
+WVS_tidy$country %>% unique
+

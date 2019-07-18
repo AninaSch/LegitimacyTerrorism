@@ -30,7 +30,7 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   print("importing WGI account data... ")
   WGI_account <- rio::import(path_loadoriginal)
   # WGI_account <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
-  # WGI_account <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
+  WGI_account <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
   
   glimpse(WGI_account)
   print("importing done")
@@ -223,12 +223,10 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
     mutate_at(c("year", "accountability", "corruption", "effectiveness", 
                 "quality", "rule_of_law", "stability"), as.numeric)
     
-  # TO DO:
-  # NEED TO HANDLE SPECIAL COUNTRIES. currentloy those are dropped when merging with GTD...
-  print("TO DO: HANDLE SPECIAL COUNTRIES (Syrian Arab Republic, -Venezuela, RB-, Soudan...)")
-  
-  
   saveRDS(WGI_tidy, file = path_savetidy)
   print("processed WGI data saved")
   
 }
+
+# Look up countries
+  # WGI_tidy$country %>% unique

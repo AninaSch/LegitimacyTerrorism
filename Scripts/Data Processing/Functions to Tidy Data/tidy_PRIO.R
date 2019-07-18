@@ -4,12 +4,12 @@
 
 # note: this function is called from tidy_datasets.R
 
-#tidy_GTD <- function(path_loadoriginal, path_savetidy){
+tidy_PRIO <- function(path_loadoriginal, path_savetidy){
   
   #       1. read prio Data
   #print("importing prio data... ")
   prio <- rio::import(path_loadoriginal)
-  # prio <- rio::import("../../../Data/Original Data/PRIO/ucdp-prio-acd-191.xlsx") # for debugging
+  prio <- rio::import("../../../Data/Original Data/PRIO/ucdp-prio-acd-191.xlsx") # for debugging
   
   glimpse(prio)
   print("importing done")
@@ -22,20 +22,19 @@
     select(
       year,
       country,
-      type_of_conflict,
+      type_of_conflict
     ) %>%
     filter(
       year >= 1970
     ) %>%
-    mutate(country = as.factor(country)) %>%
-    arrange(country, year) %>%
     separate(country, 
              into = c("ctry1", "ctry2", "ctry3", "ctry4"), 
              sep = ",") %>% # location = all countries involved. take them all into account (max=4)
     gather(key = location, value = country, c("ctry1", "ctry2", "ctry3", "ctry4"), na.rm = TRUE) %>%
+    mutate(country = as.factor(str_trim(country, side = "left"))) %>%
     select(-location) %>%
     arrange(country, year)
-  # glimpse(polity_tidy)
+  # glimpse(prio_tidy)
   print("tidying done")
   
   # handle special countries:
@@ -56,3 +55,8 @@
   print("processed Prio data saved")
   
   }
+  
+
+  # Look up countries
+  # prio_tidy$country %>% unique
+ 
