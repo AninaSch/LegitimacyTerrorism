@@ -15,7 +15,7 @@ tidy_Polity4 <- function(path_loadoriginal, path_savetidy){
   #       1. read Polity Data
   print("importing Polity data... ")
   polity <- rio::import(path_loadoriginal)
-  # polity <- rio::import("../../../Data/Original Data/SystemicPeace/p4v2017.xls") # for debugging
+  polity <- rio::import("../../../Data/Original Data/SystemicPeace/p4v2017.xls") # for debugging
   # glimpse(polity)
   print("importing done")
   
@@ -35,6 +35,8 @@ tidy_Polity4 <- function(path_loadoriginal, path_savetidy){
     ) %>%
     mutate(country = as.factor(country)) %>%
     arrange(country, year)
+  
+  
   # glimpse(polity_tidy)
   print("tidying done")
   
@@ -46,14 +48,18 @@ tidy_Polity4 <- function(path_loadoriginal, path_savetidy){
   # e.g. GTD has no distinction btw north and south Yemem. Polity does before 1990
   # so we cuold average Yemen scores by year in Polity before 1990 and rename country as Yemen
 
-  # TO DO:
-  # NEED TO HANDLE SPECIAL COUNTRIES. currentloy those are dropped when merging with GTD...
-  print("TO DO: HANDLE SPECIAL COUNTRIES (north/south Yemen, Vietnam, Soudan, Germany...)")
-  # example: table(polity_tidy$country)
+
+# Cleaning of missing values
   
-  # TO DO:
-  # NEED TO HANDLE HERE THE SPECIAL CASES, WHEN THE SCORES ARE -77, -66 etc.
-  print("TO DO: HANDLE SPECIAL SCORES (-66, -77, -88...)")
+  # summary(polity_tidy)
+  # describe(polity_tidy)
+  # 
+  polity_tidy[polity_tidy == -88] <- NA
+  polity_tidy[polity_tidy == -77] <- NA
+  polity_tidy[polity_tidy == -66] <- NA
+  
+  # Note
+  # HANDLEd HERE THE SPECIAL CASES, WHEN THE SCORES ARE -77, -66 etc.
   # Revised Combined Polity Score: This variable is a modified version of the POLITY variable added
   # in order to facilitate the use of the POLITY regime measure in time-series analyses. It modifies the
   # combined annual POLITY score by applying a simple treatment, or ““fix,” to convert instances of
@@ -76,3 +82,5 @@ tidy_Polity4 <- function(path_loadoriginal, path_savetidy){
   print("processed Polity data saved")
   
 }
+
+

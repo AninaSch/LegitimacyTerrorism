@@ -10,6 +10,7 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   #       1. read GTD
   print("importing GTD data... (30sec.)")
   GTD <- rio::import(path_loadoriginal)
+  # GTD <- rio::import("../../../Data/Original Data/GTD/globalterrorismdb_0718dist.xlsx")
   print("importing done")
   
   
@@ -65,8 +66,8 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   #     3. Fill the dataset with years without events
   
   # create "structure" data frame with all the year and country combinations:
-  countries = GTD_clean$country %>% unique() %>% rep(48)
-  years = rep(c(1970:2017), 205) %>% sort()
+  countries = GTD_clean %>% filter(year > 1999) %>% .$country %>% unique() %>% rep(18)
+  years = rep(c(2000:2017), 167) %>% sort()
   GTD_struct <- data.frame(
     year = years,
     country = countries
@@ -85,6 +86,12 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   # n_events can be used in a negative binomial regression
   # had_events can be used in a logistic regression
   print("replace NA done")
+  
+  
+  print("TO DO: HANDLE TEMPORARY COUNTRIES. currently they are included and it is not correct!")
+  
+  # countries_to_erase = c("West Germany (FRG)", "Soviet Union", "South Sudan", "South Vietnam",
+  #                        "South Yemen", "People's Republic of the Congo", ...)
   
   #     5. save output dataset:
   saveRDS(GTD_tidy, file = path_savetidy)

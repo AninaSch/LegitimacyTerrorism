@@ -53,7 +53,7 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   
   # read WVS Data
   print("importing WVS data... (1min) ")
-  # WVS <- rio::import(path_loadoriginal)
+  WVS <- rio::import(path_loadoriginal)
   WVS <- rio::import("../../../Data/Original Data/WorldValueSurvey/F00008390-WVS_Longitudinal_1981_2016_r_v20180912.rds") # for debugging
   # glimpse(WVS)
   print("importing done")
@@ -110,11 +110,11 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
 
   saveRDS(WVS_tidy_wave6, file = path_savetidy)
   # saveRDS(WVS_tidy_wave6, file = "../../../Data/Processed Data/WVS_tidy_wave6.rds")
-  print("processed WVS data saved")
+  print("processed WVS wave 6 data saved")
   
 }
 
 
 # Look up countries
-WVS_tidy$country %>% unique
+# WVS_tidy$country %>% unique
 

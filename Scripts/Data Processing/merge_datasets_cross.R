@@ -14,7 +14,7 @@ PENN <- readRDS("../../Data/Processed Data/PENN_tidy.rds")
 PRIO <- readRDS("../../Data/Processed Data/Prio_tidy.rds")
 WGI <- readRDS("../../Data/Processed Data/WGI_tidy.rds")
 
-# WVS <- readRDS("../../Data/Processed Data/WVS_tidy.rds")
+WVS <- readRDS("../../Data/Processed Data/WVS_tidy.rds")
 
 
 # --- 2. Clean Countries Before Merging

@@ -47,8 +47,8 @@ Central African Republic,Central African Republic
 Chad,Chad
 Chile,Chile
 China,China
-"China, Hong Kong SAR ",China
-"China, Macao SAR",China
+"China, Hong Kong SAR ",Hong Kong
+"China, Macao SAR",Macau
 Colombia,Colombia
 Comoros,Comoros
 Congo Brazzaville,Congo Republic
@@ -88,7 +88,6 @@ Falkland Islands,Falkland Islands
 Fiji,Fiji
 Finland,Finland
 France,France
-French Guiana,French Guiana
 French Guiana,French Guiana
 French Polynesia,French Polynesia
 Gabon,Gabon
@@ -288,7 +287,7 @@ Vietnam (North Vietnam),North Vietnam
 Vietnam South,South Vietnam
 Vietnam,Vietnam
 Viet Nam,Vietnam
-Virgin Islands (U.S.),United States
+Virgin Islands (U.S.),Virgin Islands
 Wallis and Futuna,Wallis and Futuna
 West Bank and Gaza Strip,West Bank and Gaza Strip
 West Bank and Gaza,West Bank and Gaza Strip
@@ -302,7 +301,7 @@ Yemen North,North Yemen
 Yemen South,South Yemen
 "Yemen, Rep.",North Yemen
 Yugoslavia,Yugoslavia
-FYR,Yugoslavia
+FYR,FYR
 Zaire,Congo DRC
 Zambia,Zambia
 Zimbabwe,Zimbabwe

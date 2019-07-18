@@ -1,2 +1,3 @@
 load("/Users/dla/Documents/Data Science and Viz/Legitimacy_and_ViolentExtremism/LegitimacyTerrorism/Data/Processed Data/polity_tidy.rds")
 load("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Processed Data/WVS_tidy.rds")
+load("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Processed Data/WGI_tidy.rds")

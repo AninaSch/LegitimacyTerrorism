@@ -28,9 +28,9 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   # 1. ACCOUNTABILITY  
   #   read WGI account Data
   print("importing WGI account data... ")
-  WGI_account <- rio::import(path_loadoriginal)
+  # WGI_account <- rio::import(path_loadoriginal)
   # WGI_account <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
-  WGI_account <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_account.xlsx") # for debugging
+  WGI_account <- rio::import(paste0(path_loadoriginal, "wgidataset_account.xlsx")) # for debugging
   
   glimpse(WGI_account)
   print("importing done")
@@ -61,7 +61,7 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   print("importing WGI stability data... ")
   # WGI_stability <- rio::import(path_loadoriginal)
   # WGI_stability <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_stability.xlsx") # for debugging
-  WGI_stability <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_stability.xlsx") # for debugging
+  WGI_stability <- rio::import(paste0(path_loadoriginal, "wgidataset_stability.xlsx")) # for debugging
   
   glimpse(WGI_stability)
   print("importing done")
@@ -92,7 +92,7 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   print("importing WGI stability data... ")
   # WGI_effect <- rio::import(path_loadoriginal)
   # WGI_effect <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_effect.xlsx") # for debugging
-  WGI_effect <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_effect.xlsx") # for debugging
+  WGI_effect <- rio::import(paste0(path_loadoriginal, "wgidataset_effect.xlsx")) # for debugging
   
   glimpse(WGI_effect)
   print("importing done")
@@ -122,7 +122,7 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   print("importing WGI regulatory quality data... ")
   # WGI_quality <- rio::import(path_loadoriginal)
   # WGI_quality <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_quality.xlsx") # for debugging
-  WGI_quality <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_quality.xlsx") # for debugging
+  WGI_quality <- rio::import(paste0(path_loadoriginal, "wgidataset_quality.xlsx")) # for debugging
   
   glimpse(WGI_quality)
   print("importing done")
@@ -152,7 +152,7 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   print("importing WGI rule of law data... ")
   # WGI_rulelaw <- rio::import(path_loadoriginal)
   # WGI_rulelaw <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_rulelaw.xlsx") # for debugging
-  WGI_rulelaw <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_rulelaw.xlsx") # for debugging
+  WGI_rulelaw <- rio::import(paste0(path_loadoriginal, "wgidataset_rulelaw.xlsx")) # for debugging
   
   glimpse(WGI_rulelaw)
   print("importing done")
@@ -183,7 +183,7 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   print("importing WGI control of corruption data... ")
   # WGI_corruption <- rio::import(path_loadoriginal)
   # WGI_rcorruption <- rio::import("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Original Data/WorldBank/WorldGovIndex/wgidataset_corruption.xlsx") # for debugging
-  WGI_corruption <- rio::import("../../../Data/Original Data/WorldBank/WorldGovIndex/wgidataset_corruption.xlsx") # for debugging
+  WGI_corruption <- rio::import(paste0(path_loadoriginal, "wgidataset_corruption.xlsx")) # for debugging
   
   glimpse(WGI_corruption)
   print("importing done")

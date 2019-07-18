@@ -4,14 +4,31 @@
 
 # note: this function is called from tidy_datasets.R
 
+
+# 1 = extrasystemic (between a state and a non-state group outside its own territory, where the government side is fighting to retain control of a territory outside the state system)
+# 2 = interstate (both sides are states in the Gleditsch and
+#                 Ward membership system).
+# 3 = internal (side A is always a government; side B is
+#               always one or more rebel groups; there is no
+#               involvement of foreign governments with troops, i.e.
+#               there is no side_a_2nd or side_b_2nd coded)
+# 4 = internationalized internal (side A is always a
+#                                 government; side B is always one or more rebel
+#                                 groups; there is involvement of foreign
+#                                 governments with troops, i.e. there is at least ONE
+#                                 side_a_2nd or side_b_2nd coded)
+
+
 tidy_PRIO <- function(path_loadoriginal, path_savetidy){
+  
+  library(fastDummies)
   
   #       1. read prio Data
   #print("importing prio data... ")
   prio <- rio::import(path_loadoriginal)
-  prio <- rio::import("../../../Data/Original Data/PRIO/ucdp-prio-acd-191.xlsx") # for debugging
+  # prio <- rio::import("../../../Data/Original Data/PRIO/ucdp-prio-acd-191.xlsx") # for debugging
   
-  glimpse(prio)
+  # glimpse(prio)
   print("importing done")
   
   # change location to country
@@ -35,22 +52,30 @@ tidy_PRIO <- function(path_loadoriginal, path_savetidy){
     select(-location) %>%
     arrange(country, year)
   # glimpse(prio_tidy)
+  
+  
+  # create dummy for type of conflict:
+  prio_tidy <- fastDummies::dummy_cols(prio_tidy, select_columns = "type_of_conflict")
+
+    # Handle issue of more than 1 conflict per country:
+  prio_tidy <- prio_tidy %>% distinct()
+  
+  # concatenate cases with several types of conflicts per year
+  prio_tidy <- prio_tidy %>%
+    group_by(year, country) %>%
+    summarise(type_of_conflict_1 = sum(type_of_conflict_1),
+           type_of_conflict_2 = sum(type_of_conflict_2),
+           type_of_conflict_3 = sum(type_of_conflict_3),
+           type_of_conflict_4 = sum(type_of_conflict_4)) %>%
+    mutate(any_conflict = type_of_conflict_1 + type_of_conflict_2 + 
+             type_of_conflict_3 + type_of_conflict_4) %>%
+    mutate(any_conflict = ifelse(any_conflict >= 1, 1, 0)) %>%
+    arrange(country)
+  
+  
   print("tidying done")
   
-  # handle special countries:
-  # as we match to GTD, we should have the same countries as there.
-  # this is not about spelling, spelling is handled in Data/Processed Data/To Clean Countries/countries.csv
-  # but about the different splits of the countries.
-  
-  # e.g. GTD has no distinction btw north and south Yemem. Polity does before 1990
-  # so we cuold average Yemen scores by year in Polity before 1990 and rename country as Yemen
 
-  # TO DO:
-  # NEED TO HANDLE SPECIAL COUNTRIES. currentloy those are dropped when merging with GTD...
-  print("TO DO: HANDLE SPECIAL COUNTRIES (north/south Yemen, Zimbabwe (Rhodesia), ...)")
-  
-  
-  
   saveRDS(prio_tidy, file = path_savetidy)
   print("processed Prio data saved")
   
