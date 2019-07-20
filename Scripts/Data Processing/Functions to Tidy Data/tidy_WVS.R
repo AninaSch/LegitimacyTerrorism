@@ -43,7 +43,16 @@
 # 2014     0     0     0     0     0 10522
 # 2016     0     0     0     0     0  1996
 
+# 
+# Theory: citizenship's trait (Weatherford 1992)
+# political interest and involvement
+# (psychological feeling that political involvement is worth the opportunity cost of trading off time and commitment from other occupants)
+# belief about interpersonal and social relations relevant ot collective action (expectations about the intentions and turstworthiness of other people)
+
 tidy_WVS <- function(path_loadoriginal, path_savetidy){
+  
+  print("This function has to be cleaned")
+  
   
   library(sjlabelled) # to get labels of labelled data
   library(Hmisc) # the data labels (variable names)
@@ -90,6 +99,42 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   # table(WVS_tidy$trust_others)
   # table(WVS_tidy$importance_politics)
   # table(WVS_tidy$interest_politics1)
+#   
+# aggregate variables at country level
+  
+  WVS_tidy_aggregate <- WVS_tidy %>%
+    group_by(country, year) %>%
+    summarise(
+      mean_trust_others = mean(trust_others, na.rm=TRUE),
+      mean_importance_politics = mean(importance_politics, na.rm=TRUE),
+      mean_interest_politics1 = mean(interest_politics1, na.rm=TRUE)
+    ) %>%
+    arrange(country, year)
+  # control:
+  # WVS_tidy %>% filter(country == "Albania", year == 1998) %>% .$trust_others %>% mean()
+  # WVS_tidy %>% filter(country == "Albania", year == 1998) %>% .$trust_others %>% median()
+  # 
+    
+  WVS_agg_subset = WVS_tidy_aggregate %>% filter(
+    country %in% c("Russia", "Poland", "Peru", "Nigeria", "Norway", "Mexico")
+  )
+  
+  ggplot(data=WVS_agg_subset, aes(x=year, y=mean_trust_others, group=country)) +
+    geom_line() +
+    geom_point()  + theme_bw()   
+  
+    
+  print("tidying done")
+  
+table(WVS_tidy$country, WVS_tidy$year) %>% tail(100)
+  
+  
+# 
+# 
+# fill in missing values
+# 
+# 
+# consistency check
 
    
   
@@ -117,4 +162,7 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
 
 # Look up countries
 # WVS_tidy$country %>% unique
+
+
+
 
