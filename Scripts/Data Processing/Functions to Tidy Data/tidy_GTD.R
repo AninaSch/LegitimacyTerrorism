@@ -63,7 +63,7 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   
   print("TOTHINK: do we need fatalities too?")
   
-  #     3. Fill the dataset with years without events
+  #     3. Fill the dataset with years without events [FOR LATER: RUN ANALYSIS FROM 1970 ON]
   
   # create "structure" data frame with all the year and country combinations:
   countries = GTD_clean %>% filter(year > 1999) %>% .$country %>% unique() %>% rep(18)
@@ -73,12 +73,19 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
     country = countries
   ) 
   
-  countries = GTD_clean %>% filter(year > 1999) %>% .$country %>% unique() %>% rep(18)
-  years = rep(c(2000:2017), 167) %>% sort()
-  GTD_struct <- data.frame(
-    year = years,
-    country = countries
-  ) 
+ # 4. remove countries [FOR LATER: MERGE COUNTRIES THAT HAVE BEEN CREATED LATER TO THE ORIGINAL COUNTRIES]
+  
+  # NEW countries: 
+  #   East Timor in 2002 (former: Indonesia)
+  #   Montenegro in 2006 (former: Serbia and Montenegro)
+  #   Kosovo in 2008 (former: Serbia)
+  #   South Sudan in 2001 (former: Sudan)
+  
+  GTD_struct <- GTD_struct %>%
+    filter(country != "East Timor", country!= "Montenegro", country != "Kosovo", country != "South Sudan",
+         country != "Sudan", country !="Serbia", country != "Serbia-Montenegro")
+  
+  
   
   # We merge GTD_clean and GTD_tidy to get the number of events:
   # It is a left join, to get n_events only where and when there were events:
@@ -94,8 +101,11 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   # had_events can be used in a logistic regression
   print("replace NA done")
   
+  # drop levels of deleted countries:
+  levels(droplevels(GTD_tidy$country))
   
-  print("TO DO: HANDLE TEMPORARY COUNTRIES. currently they are included and it is not correct!")
+  
+  print("TO DO: ADD YEARS 1970-1999 AND HANDLE TEMPORARY COUNTRIES. currently they are EXCLUDED")
   
   # countries_to_erase = c("West Germany (FRG)", "Soviet Union", "South Sudan", "South Vietnam",
   #                        "South Yemen", "People's Republic of the Congo", ...)

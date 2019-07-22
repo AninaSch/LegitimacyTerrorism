@@ -47,25 +47,13 @@ GTD_polity_PENN_PRIO <- GTD_polity_PENN_PRIO %>%
 # --- then we merge WGI to GTD_polity_PENN_PRIO:
 GTD_polity_PENN_PRIO_WGI <- left_join(GTD_polity_PENN_PRIO, WGI, by = c("consolidated_country", "year"))
 
+# # NOT ANYMORE, because we handle this in tidy_GTD: year > 1999 and delete "non-constant" countries
+# # some duplicate were created, because in some datasets, some year-country combinations happen twice
+# GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>% distinct()
 
-# some duplicate were created, because in some datasets, some year-country combinations happen twice
-GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>% distinct()
-
-# still 5 "duplicates" left:
-# check later
-
-# take years after 2000: (quick dirty fix for the temporary countries):
-GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>%
-  filter(year > 1999)
-
-
-
-# my_dataset <- GTD_polity # until we get our final dataset.
 
 # --- 4. Controls
 
-# we did a left join, matching to GTD countries and year, so it is probable that we miss data from the other dataset.
-# TODO: show extend of missing data here, decide how to handle.
 
 # View(GTD_polity %>% group_by(consolidated_country) %>% summarise(polity_na_count = sum(is.na(polity))))
 # View(GTD_polity_PENN %>% group_by(consolidated_country) %>% summarise(n_GDP_exp = sum(is.na(GDP_expentiture))))

@@ -5,14 +5,13 @@
 
 # Note: this function is called from tidy_datasets.R
 
-tidy_GTD <- function(path_loadoriginal, path_savetidy){
+library(tidyverse)
+
+
   
   #       1. read GTD
-  print("importing GTD data... (30sec.)")
-  GTD <- rio::import(path_loadoriginal)
-  # GTD <- rio::import("../../../Data/Original Data/GTD/globalterrorismdb_0718dist.xlsx")
-  print("importing done")
-  
+  GTD <- rio::import("../../../Data/Original Data/GTD/globalterrorismdb_0718dist.xlsx")
+
   
   #       2. data selection
   
@@ -27,32 +26,29 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
     select(
       eventid, 
       year = iyear, 
-      country = country_txt,
-      # region = region_txt,
-      # success, # unsure yet if we should keep only successful attacks or not.
-      # attacktype1_txt, 
-      # gname, # GTD %$% gname %>% unique() %>% length() ==> 1364 different organisation. Could invest time classify them (e.g. far-left, far-right, islamist)
-      # nkill # we could dichotomize it in the mutate below: with and without victims.
-      # targtype1_txt,
-    ) %>% 
-    filter( 
-      # no filter on years ==. years: 1970-2017
-      # NOTE do not filter on year here, but later. Else adding years without events below is not working
-      # no filter on country. it will depend on what we have in the other datasets that we join to GTD.
-    ) %>%
+      country = country_txt) %>%
     mutate(
-      # didkill = as.factor(ifelse(nkill > 0, "yes", "no")), # note: keeps NA's as NA's (that's good)
-      # didwound = ifelse(nwound > 0, "yes", "no") # note: keeps NA's as NA's (that's good)
-      # year = as.factor(year),
-      country = as.factor(country),
-      # region = as.factor(region)
+      country = as.factor(country)
     ) %>% # we sort by country and year (aesthetic):
     arrange(country, year) %>% # we sum the number of event by country and year:
     count(year, country) %>%
     group_by(year, country) %>%
     summarise(n_events = sum(n, na.rm = TRUE)) %>%
     arrange(country, year)
+  
   print("cleaning done")
+  
+   
+  #       3. rename countries that do not exist any longer
+  
+
+
+
+
+  
+  
+  #     3. Fill the dataset with years without events
+  
   
   # we have now a dataset from the GTD with country, year and region, with:
   #     - n_events: the sum of the number of terrorist events by year and country
@@ -61,17 +57,16 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   # note that this assumes that there were no event in this country in this year, and not that no data was collected...
   # (note also: the countries without any terrorism event in the given years are not included (and not in GTD))
   
-  print("TOTHINK: do we need fatalities too?")
-  
-  #     3. Fill the dataset with years without events
+  # 2000 - 2017
   
   # create "structure" data frame with all the year and country combinations:
-  countries = GTD_clean %>% filter(year > 1999) %>% .$country %>% unique() %>% rep(18)
-  years = rep(c(2000:2017), 167) %>% sort()
-  GTD_struct <- data.frame(
-    year = years,
-    country = countries
-  ) 
+  # GTD_clean$country %>% unique() %>% length()
+  # countries = GTD_clean %>% .$country %>% unique() %>% rep(48)
+  # years = rep(c(1970:2017), 205) %>% sort()
+  # GTD_struct <- data.frame(
+  #   year = years,
+  #   country = countries
+  # ) 
   
   countries = GTD_clean %>% filter(year > 1999) %>% .$country %>% unique() %>% rep(18)
   years = rep(c(2000:2017), 167) %>% sort()
@@ -79,6 +74,23 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
     year = years,
     country = countries
   ) 
+  
+  # add n_events to GTD_struct to see when and where there were events
+  GTD_control <- GTD_clean %>% right_join(GTD_struct, GTD_clean, by = c("year", "country")) %>%
+    arrange(country, year) 
+  
+  # list occurrences in GTD:
+  tmp <- GTD_clean %>% filter(year > 1999) %>% group_by(country) %>% tally()
+  
+  
+  
+  
+  # countries = GTD_clean %>% filter(year > 1999) %>% .$country %>% unique() %>% rep(18)
+  # years = rep(c(2000:2017), 167) %>% sort()
+  # GTD_struct <- data.frame(
+  #   year = years,
+  #   country = countries
+  # ) 
   
   # We merge GTD_clean and GTD_tidy to get the number of events:
   # It is a left join, to get n_events only where and when there were events:
@@ -94,17 +106,16 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   # had_events can be used in a logistic regression
   print("replace NA done")
   
+  # TO DO: REMOVE 1993
+  
   
   print("TO DO: HANDLE TEMPORARY COUNTRIES. currently they are included and it is not correct!")
   
   # countries_to_erase = c("West Germany (FRG)", "Soviet Union", "South Sudan", "South Vietnam",
   #                        "South Yemen", "People's Republic of the Congo", ...)
   
-  #     5. save output dataset:
-  saveRDS(GTD_tidy, file = path_savetidy)
-  print("saving processed data GTD done")
-  
-}
+
+
 
 
 

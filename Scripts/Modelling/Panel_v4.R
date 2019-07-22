@@ -54,6 +54,9 @@ summary(pnb)
 
 # VERSION 2 LEGITIMACY MEASURES FROM WGI DATA BASE
 
+# correlation matrix
+cor(my_data %>% select(-consolidated_country), use = "pairwise.complete.obs")
+
 
 # legitimacy 
 pnb <- pglm(n_events ~ accountability + corruption + effectiveness + quality + rule_of_law,  my_data,
@@ -70,9 +73,44 @@ summary(pnb)
 #  lagged legitimacy + lagged controls
 # FINAL MODEL
 
-pnb <- pglm(n_events ~ lag(accountability) + lag(corruption) + lag(effectiveness) + lag(quality) + lag(rule_of_law) + lag(log(GDP_expentiture)) + lag(log(pop)) + lag(any_conflict) +lag(stability),  my_data,
+pnb <- pglm(n_events ~ lag(accountability) + lag(corruption) + lag(effectiveness) + lag(quality) + 
+              lag(rule_of_law) ,  my_data,
+            family = negbin, model = "within", print.level = 3, method = "nr",
+            index = c('consolidated_country', 'year'))
+summary(pnb)
+
+pnb <- pglm(n_events ~ lag(accountability) + lag(corruption) + lag(effectiveness) + lag(quality) + 
+              lag(rule_of_law) + lag(any_conflict),  my_data,
+            family = negbin, model = "within", print.level = 3, method = "nr",
+            index = c('consolidated_country', 'year'))
+summary(pnb)
+
+pnb <- pglm(n_events ~ lag(accountability) + lag(corruption) + lag(effectiveness) + lag(quality) + 
+              lag(rule_of_law) + lag(any_conflict) + lag(stability),  my_data,
+            family = negbin, model = "within", print.level = 3, method = "nr",
+            index = c('consolidated_country', 'year'))
+summary(pnb)
+
+pnb <- pglm(n_events ~ lag(accountability) + lag(corruption) + lag(effectiveness) + lag(quality) + 
+              lag(rule_of_law) + lag(log(GDP_expentiture)) + lag(log(pop)) + lag(any_conflict),  
+            my_data,
+            family = negbin, model = "within", print.level = 3, method = "nr",
+            index = c('consolidated_country', 'year'))
+summary(pnb)
+
+
+
+pnb <- pglm(n_events ~ lag(accountability) + lag(corruption) + lag(effectiveness) + lag(quality) + 
+              lag(rule_of_law) + lag(log(GDP_expentiture)) + lag(log(pop)) + lag(any_conflict) +lag(stability),  my_data,
            family = negbin, model = "within", print.level = 3, method = "nr",
            index = c('consolidated_country', 'year'))
+summary(pnb)
+
+pnb <- pglm(n_events ~ lag(accountability) + lag(corruption) + lag(effectiveness) + lag(quality) + 
+              lag(rule_of_law) + lag(GDP_expentiture) + lag(pop) + lag(any_conflict) +lag(stability),  
+            my_data.scl,
+            family = negbin, model = "within", print.level = 3, method = "nr",
+            index = c('consolidated_country', 'year'))
 summary(pnb)
 
 # REPORT IRR
