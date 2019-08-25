@@ -22,7 +22,8 @@ clean_countries <- function(df, path_to_country_dictionary) {
   
   return(
     left_join(df, country_dic, by = "country") %>% # merge by "country" column with df
-      select(-country) # keep only the new "consolidated_country" name
+      dplyr::select(-country) # keep only the new "consolidated_country" name
   )
+  
 }
 

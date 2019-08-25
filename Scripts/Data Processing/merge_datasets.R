@@ -4,6 +4,8 @@
 # --- 0. Setup
 
 library(tidyverse)
+# library(foreign) 
+
 source("Other functions/clean_countries.R") # function to clean country names
 
 # --- 1. Load Processed Datasets
@@ -88,5 +90,4 @@ GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>%
 # --- 5. Saving 
 
 saveRDS(GTD_polity_PENN_PRIO_WGI, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_2000.rds")
-
 

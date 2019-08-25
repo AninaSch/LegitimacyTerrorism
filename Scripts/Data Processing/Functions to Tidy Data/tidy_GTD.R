@@ -28,6 +28,9 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
       eventid, 
       year = iyear, 
       country = country_txt,
+      nationality_location = INT_LOG, # nationality of perpetrator == location of attack
+      # nationality_nationality = INT_IDEO, # nationality of perpetrator == nationality of target
+      location_nationality = INT_MISC # location of attack == nationality of target
       # region = region_txt,
       # success, # unsure yet if we should keep only successful attacks or not.
       # attacktype1_txt, 
@@ -44,15 +47,40 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
       # didkill = as.factor(ifelse(nkill > 0, "yes", "no")), # note: keeps NA's as NA's (that's good)
       # didwound = ifelse(nwound > 0, "yes", "no") # note: keeps NA's as NA's (that's good)
       # year = as.factor(year),
-      country = as.factor(country),
+      country = as.factor(country)
       # region = as.factor(region)
     ) %>% # we sort by country and year (aesthetic):
-    arrange(country, year) %>% # we sum the number of event by country and year:
-    count(year, country) %>%
-    group_by(year, country) %>%
-    summarise(n_events = sum(n, na.rm = TRUE)) %>%
     arrange(country, year)
+  
+  GTD_clean_events <- GTD_clean %>% # we sum the number of event by country and year:
+    count(year, country, name = "n_events") %>%
+    # group_by(year, country) %>%
+    # summarise(n_events = sum(n, na.rm = TRUE)) %>%
+    arrange(country, year)
+  
+  GTD_clean_domesticperpetrator <- GTD_clean %>% 
+    filter(nationality_location == 0) %>%
+    count(year, country, name = "n_domperp_events") %>%
+    arrange(country, year)
+  
+  GTD_clean_domestictarget <- GTD_clean %>% 
+    filter(location_nationality == 0) %>%
+    count(year, country, name = "n_domtarg_events") %>%
+    arrange(country, year)
+  
+  # merge all 3 in one dataset:
+  GTD_clean <- left_join(GTD_clean_events, GTD_clean_domesticperpetrator)
+  GTD_clean <- left_join(GTD_clean, GTD_clean_domestictarget)
+  
+  
   print("cleaning done")
+  
+# GTD_clean$location_attack[GTD_clean$location_attack == "-9"] <- "1"
+  
+
+  
+    
+  
   
   # we have now a dataset from the GTD with country, year and region, with:
   #     - n_events: the sum of the number of terrorist events by year and country
@@ -83,7 +111,8 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   
   GTD_struct <- GTD_struct %>%
     filter(country != "East Timor", country!= "Montenegro", country != "Kosovo", country != "South Sudan",
-         country != "Sudan", country !="Serbia", country != "Serbia-Montenegro")
+         country != "Sudan", country !="Serbia", country != "Serbia-Montenegro",
+         country != "International")
   
   
   
@@ -91,7 +120,7 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   # It is a left join, to get n_events only where and when there were events:
   GTD_tidy <- left_join(GTD_struct, GTD_clean, by = c("year", "country")) %>%
     arrange(country, year) %>% # just easier to read
-    replace_na(list("n_events" = 0)) # replace missing values in year/coutry for n_events by 0.
+    replace_na(list("n_events" = 0, "n_domperp_events" = 0, "n_domtarg_events" = 0)) # replace missing values in year/coutry for n_events by 0.
   print("tidy and merging done")
   
   #     4. Add binary variable if there was any event (one or more) in a given country/year
