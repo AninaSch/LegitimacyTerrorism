@@ -25,7 +25,10 @@ tidy_PENN <- function(path_loadoriginal, path_savetidy){
     filter(
       year >= 1970
     ) %>%
-    mutate(country = as.factor(country)) %>%
+    mutate(
+      country = as.factor(country),
+      GDPexp_capita = GDP_expentiture / pop # note: both are in millions so it works
+      ) %>%
     arrange(country, year)
   # glimpse(penn_tidy)
   print("tidying done")

@@ -14,6 +14,7 @@ set more off
 *http://econbrowser.com/archives/2014/02/use-of-logarithms-in-economics
 
 gen logGDP_expentiture = log(GDP_expentiture)
+gen logGDPexp_capita = log(GDPexp_capita)
 gen logpop = log(pop)
 // is this reasonable?
 
@@ -26,6 +27,8 @@ gen lag1rule_of_law = rule_of_law[_n-1]
 
 gen lag1logGDP_expentiture = logGDP_expentiture[_n-1]
 gen lag1GDP_expentiture = GDP_expentiture[_n-1]
+gen lag1logGDPexp_capita = logGDPexp_capita[_n-1]
+
 
 gen lag1logpop = logpop[_n-1]
 gen lag1pop = pop[_n-1]
@@ -45,7 +48,7 @@ corr accountability corruption effectiveness quality rule_of_law polity2
 
 *-------------- summary statistics
 generate y = uniform()
-eststo: quietly regress y n_events accountability corruption effectiveness quality rule_of_law polity2 GDP_expentiture pop any_conflict durable, noconstant
+eststo: quietly regress y n_events accountability corruption effectiveness quality rule_of_law polity2 GDPexp_capita pop any_conflict durable, noconstant
 
 estadd summ : *	
 esttab using "/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Scripts/Modelling/SummaryStata.rtf", ///

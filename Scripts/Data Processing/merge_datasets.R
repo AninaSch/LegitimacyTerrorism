@@ -53,8 +53,6 @@ GTD_polity_PENN_PRIO_WGI <- left_join(GTD_polity_PENN_PRIO, WGI, by = c("consoli
 # some duplicate were created, because in some datasets, some year-country combinations happen twice
 GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>% distinct()
 
-# still 5 "duplicates" left:
-# check later
 
 # take years after 2000: (quick dirty fix for the temporary countries):
 GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>%
