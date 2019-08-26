@@ -260,5 +260,14 @@ summary(my_pglm) # ==> SAME DIRECTION OF THE EFFECTS.
   
 
 
+cor(final_dataset$n_events, final_dataset$effectiveness, use = "complete.obs")
+cor(final_dataset$n_events, final_dataset$accountability, use = "complete.obs")
 
+
+my_pglm <- pglm(n_events ~ lag(effectiveness),
+                filter(final_dataset, !(consolidated_country %in% countries_with_few_events)),
+                family = negbin, model = "within", print.level = 3, method = "nr",
+                index = c('consolidated_country', 'year'),
+                start = NULL, R = 20 )
+summary(my_pglm) 
 
