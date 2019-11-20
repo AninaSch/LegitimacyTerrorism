@@ -28,7 +28,7 @@ tidy_Polity4(path_loadoriginal, path_savetidy) # import original, clean, tidy, s
 # --- 3. tidy WVS:
 source("Functions to Tidy Data/tidy_WVS.R")
 path_loadoriginal = "../../Data/Original Data/WorldValueSurvey/F00008390-WVS_Longitudinal_1981_2016_r_v20180912.rds"
-path_savetidy = "../../Data/Processed Data/WVS_tidy_wave6.rds"
+path_savetidy = "../../Data/Processed Data/WVS_tidy_wave456.rds"
 tidy_WVS(path_loadoriginal, path_savetidy) # import original, clean, tidy, save in processed data
 
 

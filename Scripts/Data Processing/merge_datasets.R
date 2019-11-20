@@ -15,9 +15,7 @@ polity <- readRDS("../../Data/Processed Data/polity_tidy.rds")
 PENN <- readRDS("../../Data/Processed Data/PENN_tidy.rds")
 PRIO <- readRDS("../../Data/Processed Data/Prio_tidy.rds")
 WGI <- readRDS("../../Data/Processed Data/WGI_tidy.rds")
-
-# WVS <- readRDS("../../Data/Processed Data/WVS_tidy.rds")
-
+WVS <- readRDS("../../Data/Processed Data/WVS_tidy_wave456.rds")
 
 # --- 2. Clean Countries Before Merging
 
@@ -27,6 +25,7 @@ polity <- clean_countries(polity, path_to_country_dictionary)
 PENN <- clean_countries(PENN, path_to_country_dictionary)
 PRIO <- clean_countries(PRIO, path_to_country_dictionary)
 WGI <- clean_countries(WGI, path_to_country_dictionary)
+WVS <- clean_countries(WVS, path_to_country_dictionary)
 
 # --- 3. Merging Datasets Polity_Penn_Prio
 
@@ -49,6 +48,8 @@ GTD_polity_PENN_PRIO <- GTD_polity_PENN_PRIO %>%
 # --- then we merge WGI to GTD_polity_PENN_PRIO:
 GTD_polity_PENN_PRIO_WGI <- left_join(GTD_polity_PENN_PRIO, WGI, by = c("consolidated_country", "year"))
 
+# --- then we merge WVS to GTD_polity_PENN_PRIO_WVS:
+GTD_polity_PENN_PRIO_WGI_WVS <- left_join(GTD_polity_PENN_PRIO_WGI, WVS, by = c("consolidated_country"))
 
 # some duplicate were created, because in some datasets, some year-country combinations happen twice
 GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>% distinct()
@@ -56,6 +57,9 @@ GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>% distinct()
 
 # take years after 2000: (quick dirty fix for the temporary countries):
 GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>%
+  filter(year > 1999)
+
+GTD_polity_PENN_PRIO_WGI_WVS <- GTD_polity_PENN_PRIO_WGI_WVS %>%
   filter(year > 1999)
 
 
@@ -84,8 +88,7 @@ GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>%
 #     ### !!!! we removed here important countries, like Germany !!!!!!!!!!!!!!!!!!!!! (because West/East)
 # ### !!!! TODO: consolidate their country names when tidying the datasets
 
-
 # --- 5. Saving 
-
 saveRDS(GTD_polity_PENN_PRIO_WGI, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_2000.rds")
+saveRDS(GTD_polity_PENN_PRIO_WGI_WVS, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_2000.rds")
 

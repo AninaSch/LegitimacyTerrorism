@@ -31,6 +31,15 @@ plot_events_year <- ggplot(data = sum_events_by_year, aes(x = year, y = sum_n_ev
   theme(axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold")) + 
   ggsave("plot_events_year.pdf")
 
+sum_targevents_by_year <- my_data %>% group_by(year) %>% summarise(sum_n_domtarg_events = sum(n_domtarg_events))
+plot_events_year <- ggplot(data = sum_targevents_by_year, aes(x = year, y = sum_n_domtarg_events)) +
+  geom_line() + geom_point() +
+  labs(x = "Year", y = "Sum of events over the countries", title = NULL, size=18) +
+  theme_minimal() + 
+  theme(axis.text=element_text(size=12), axis.title=element_text(size=14,face="bold")) 
+plot_events_year
+# + ggsave("plot_targevents_year.pdf")
+
 
 mean_acc <- my_data %>% group_by(n_events) %>% 
   summarise(mean_acc = mean(accountability, na.rm = TRUE))

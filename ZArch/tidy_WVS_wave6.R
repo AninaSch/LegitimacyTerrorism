@@ -43,41 +43,6 @@
 # 2014     0     0     0     0     0 10522
 # 2016     0     0     0     0     0  1996
 
-
-# --- Coding --- :
-
-# A165	Most people can be trusted:
-# 1:Most people can be trusted
-# 2:Can´t be too careful
-# -5:Missing; Unknown
-# -4:Not asked in survey
-# -3:Not applicable
-# -2:No answer
-# -1:Don´t know
-
-# A004	Important in life: Politics :
-# 1:Very important
-# 2:Rather important
-# 3:Not very important
-# 4:Not at all important
-# -5:Missing; Unknown
-# -4:Not asked in survey
-# -3:Not applicable
-# -2:No answer
-# -1:Don´t know
-
-# E023	Interest in politics:
-# 1:Very interested
-# 2:Somewhat interested
-# 3:Not very interested
-# 4:Not at all interested
-# -5:Missing; Unknown
-# -4:Not asked in survey
-# -3:Not applicable
-# -2:No answer
-# -1:Don´t know
-
-
 # 
 # Theory: citizenship's trait (Weatherford 1992)
 # political interest and involvement
@@ -110,7 +75,7 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   # 1. COUNTRY - S003
   # https://cran.r-project.org/web/packages/sjlabelled/vignettes/labelleddata.html
   WVS <- WVS %>% mutate(S003_country = sjlabelled::as_label(WVS$S003))
-
+  
   WVS_tidy <- WVS %>%
     select(
       country = S003_country,
@@ -120,62 +85,52 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
       # general_trust_citizen	=	G007_01,	#	Trust: Other people in country
       # general_trust_people	=	G007_64,	#	Trust: People in general
       importance_politics	=	A004,	#	Important in life: Politics 
-      interest_politics1	=	E023	#	Interest in politics
+      interest_politics1	=	E023,	#	Interest in politics
       # interest_politics2	=	E024,	#	Interest in politics (ii)
       # follow_politics	=	E150	#	How often follows politics in the news
     ) %>%
     filter(
-      year >= 1970,
-      # remove missing values that are coded with negative numbers:
-      trust_others > 0,
-      importance_politics > 0,
-      interest_politics1 > 0
+      year >= 1970
     ) %>%
     arrange(country, year) %>%
-    mutate(country = as.factor(country))  
-  
-  # table(WVS_tidy$trust_others, useNA="ifany")
-  # table(WVS_tidy$importance_politics, useNA="ifany")
-  # table(WVS_tidy$interest_politics1, useNA="ifany")
+    mutate(country = as.factor(country))
+    
+  # table(WVS_tidy$trust_others)
+  # table(WVS_tidy$importance_politics)
+  # table(WVS_tidy$interest_politics1)
+#   
 
-# recode variables so that higher values = better  
-
-  WVS_tidy <-WVS_tidy  %>%
-    mutate(trust_others_m=as.numeric(recode(trust_others, `1`="2", `2`="1"))) %>%
-    mutate(importance_politics_m=as.numeric(recode(importance_politics, `1`="4", `2`="3",`3`="2",`4`="1"))) %>%
-    mutate(interest_politics1_m=as.numeric(recode(interest_politics1, `1`="4", `2`="3",`3`="2",`4`="1"))) 
-  
-  # table(WVS_tidy$trust_others_m, useNA="ifany")
-  # table(WVS_tidy$importance_politics_m, useNA="ifany")
-  # table(WVS_tidy$interest_politics1_m, useNA="ifany")
-  
   print("tidying done")
   
+table(WVS_tidy$country, WVS_tidy$year) %>% tail(100)
   
-# table(WVS_tidy$country, WVS_tidy$year) %>% tail(100)
-# run this to see the levels and if there are missing values:
-# table(WVS_tidy$trust_others, useNA="ifany")
 # 
 # 
+# fill in missing values
+# 
+# 
+# consistency check
 
-  WVS_tidy_wave456 <- WVS_tidy %>%
-    filter(wave >= 4) %>%
-    group_by(country) %>% # we average by individual !
+  WVS_tidy_wave6 <- WVS_tidy %>%
+    filter(wave == 6) %>%
+    group_by(country) %>%
     summarise(
-      mean_trust_others = mean(trust_others_m, na.rm=TRUE),
-      mean_importance_politics = mean(importance_politics_m, na.rm=TRUE),
-      mean_interest_politics = mean(interest_politics1_m, na.rm=TRUE),
-      std_trust_others = sd(trust_others_m, na.rm=TRUE),
-      std_importance_politics = sd(importance_politics_m, na.rm=TRUE),
-      std_interest_politics1 = sd(interest_politics1_m, na.rm=TRUE)
+      mean_trust_others = mean(trust_others, na.rm=TRUE),
+      mean_importance_politics = mean(importance_politics, na.rm=TRUE),
+      mean_interest_politics1 = mean(interest_politics1, na.rm=TRUE),
+      std_trust_others = sd(trust_others, na.rm=TRUE),
+      std_importance_politics = sd(importance_politics, na.rm=TRUE),
+      std_interest_politics1 = sd(interest_politics1, na.rm=TRUE)
     ) %>%
     arrange()
     print("tidying done")
     
+    
 
-  saveRDS(WVS_tidy_wave456, file = path_savetidy)
-  # saveRDS(WVS_tidy_wave456, file = "../../../Data/Processed Data/WVS_tidy_wave456.rds")
-  print("processed WVS wave 4 5 6 data saved")
+
+  saveRDS(WVS_tidy_wave6, file = path_savetidy)
+  # saveRDS(WVS_tidy_wave6, file = "../../../Data/Processed Data/WVS_tidy_wave6.rds")
+  print("processed WVS wave 6 data saved")
   
 }
 
