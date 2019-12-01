@@ -2,7 +2,7 @@
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
 * STATE LEGITIMACY AND TERRORISM
 *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
-sysdir set PERSONAL "/Users/schwarze/Documents/DISS/DISSanly/ados"
+sysdir set PERSONAL "../../../ados"
 
 
 *TO DO
@@ -53,16 +53,15 @@ gen lag1polity2 = polity2[_n-1]
 
 
 
-
 *-------------- correlation matrix
 corr n_events accountability corruption effectiveness quality rule_of_law polity2
 
 *-------------- summary statistics
 generate y = uniform()
-eststo: quietly regress y n_events accountability corruption effectiveness quality rule_of_law polity2 GDPexp_capita pop any_conflict durable mean_trust_others, noconstant
+eststo: quietly regress y n_events accountability corruption effectiveness quality rule_of_law polity2 GDPexp_capita pop any_conflict durable mean_trust_others mean_importance_politics mean_interest_politics, noconstant
 
 estadd summ : *	
-esttab using "/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Scripts/Modelling/SummaryStataWVS.rtf", ///
+esttab using "../../Findings/SummaryStataWVS.rtf", ///
 	cells("mean(fmt(a2) label(Mean)) sd(fmt(a2)label(SD)) min(fmt(a2)label(Min)) max(fmt(a2)label(Max))") nodepvar nostar nonote ///
 	replace compress rtf label
 	eststo clear
@@ -75,18 +74,7 @@ xtset consolidated_country year
 
 
 
-*EFFECTIVENESS 
-
-xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, re irr
-
-xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_importance_politics, re irr
-
-xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_interest_politics, re irr
-
-
-
-
-
+*SPOTLIGHT EFFECTIVENESS 
 xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict, fe irr
 est store model
 
@@ -95,12 +83,8 @@ xline(1, lcolor(black) lwidth(thin) lpattern(dash)) ///
 drop(_cons) eform
 
 
-
-
-
-
 *ACCOUNTABILITY 
-xtnbreg n_events lag1accountability lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable lagmean_trust_others, re irr
+xtnbreg n_events lag1accountability lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, re irr
 est store model1
 
 *CORRUPTION 
@@ -108,42 +92,35 @@ xtnbreg n_events lag1corruption lag1logGDPexp_capita lag1logpop lag1any_conflict
 est store model2
 
 *EFFECTIVENESS 
-xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, fe irr
+xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, re irr
+xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_importance_politics, re irr
+xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_interest_politics, re irr
+
+xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others mean_importance_politics mean_interest_politics, re irr
 est store model3
 
 *QUALITY 
-xtnbreg n_events lag1quality lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, fe irr
+xtnbreg n_events lag1quality lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, re irr
 est store model4
 
 *RULE OF LAW
-xtnbreg n_events lag1rule_of_law lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, fe irr
+xtnbreg n_events lag1rule_of_law lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, re irr
 est store model5
 		   
 *POLITY IV: polity2
-xtnbreg n_events lag1polity2 lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, fe irr
+xtnbreg n_events lag1polity2 lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable mean_trust_others, re irr
 est store model6
 
 
 *-------------- write output
 
-esttab model1 model2 model3 model4 model5 model6 using "/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Scripts/Modelling/NegbinFixStata.rtf",  ///
+esttab model1 model2 model3 model4 model5 model6 using "../../Findings/RandomEffects/NegbinFixStata.rtf",  ///
 	wide eqlabels(none) eform z constant ///
 	mtitles ("Model 1" "Model 2" "Model 3" "Model 4" "Model 5" "Model 6" "Model 7" "Model 8") ///
 	star(* 0.05 ** 0.01 *** 0.001) ///		
 	b(%9.2f) z(%9.1f) scalars("rank Rank" "ll Log lik." "chi2 Chi-squared" "bic BIC " "aic AIC") sfmt(%9.0f %9.0f %9.2f %9.0f %9.0f) obslast   ///
 	compress rtf replace label 	
-	
-	
-esttab model1dom model2dom model3dom model4dom model5dom model6dom using "/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Scripts/Modelling/NegbinFixStataDom.rtf",  ///
-	wide eqlabels(none) eform z constant ///
-	mtitles ("Model 1" "Model 2" "Model 3" "Model 4" "Model 5" "Model 6" "Model 7" "Model 8") ///
-	star(* 0.05 ** 0.01 *** 0.001) ///		
-	b(%9.2f) z(%9.1f) scalars("rank Rank" "ll Log lik." "chi2 Chi-squared" "bic BIC " "aic AIC") sfmt(%9.0f %9.0f %9.2f %9.0f %9.0f) obslast   ///
-	compress rtf replace label 		
-	
-	
-	
-	
+		
 
 *-------------- Hausman test
 *https://www.princeton.edu/~otorres/Panel101.pdf

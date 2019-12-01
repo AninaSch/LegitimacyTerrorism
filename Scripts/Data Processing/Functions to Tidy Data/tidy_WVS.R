@@ -98,7 +98,7 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   # read WVS Data
   print("importing WVS data... (1min) ")
   WVS <- rio::import(path_loadoriginal)
-  WVS <- rio::import("../../../Data/Original Data/WorldValueSurvey/F00008390-WVS_Longitudinal_1981_2016_r_v20180912.rds") # for debugging
+  # WVS <- rio::import("../../../Data/Original Data/WorldValueSurvey/F00008390-WVS_Longitudinal_1981_2016_r_v20180912.rds") # for debugging
   # glimpse(WVS)
   print("importing done")
   
@@ -149,8 +149,17 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   # table(WVS_tidy$importance_politics_m, useNA="ifany")
   # table(WVS_tidy$interest_politics1_m, useNA="ifany")
   
-  print("tidying done")
-  
+  # Trust others
+  # 1      		2 
+  # 77852 	220933 
+  # Importance politics
+  # 1      	2     	 3      	4 
+  # 42797  85028 102045  68915 
+  # Interests in politics
+  # 1      	2     	 3     		 4 
+  # 37589 101520  91040  68636 
+  # 
+  # print("tidying done")
   
 # table(WVS_tidy$country, WVS_tidy$year) %>% tail(100)
 # run this to see the levels and if there are missing values:

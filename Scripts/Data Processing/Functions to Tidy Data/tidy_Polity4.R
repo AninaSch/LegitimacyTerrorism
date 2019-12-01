@@ -15,7 +15,7 @@ tidy_Polity4 <- function(path_loadoriginal, path_savetidy){
   #       1. read Polity Data
   print("importing Polity data... ")
   polity <- rio::import(path_loadoriginal)
-  polity <- rio::import("../../../Data/Original Data/SystemicPeace/p4v2017.xls") # for debugging
+  # polity <- rio::import("../../../Data/Original Data/SystemicPeace/p4v2017.xls") # for debugging
   # glimpse(polity)
   print("importing done")
   
@@ -79,6 +79,8 @@ tidy_Polity4 <- function(path_loadoriginal, path_savetidy){
 
   
   saveRDS(polity_tidy, file = path_savetidy)
+  # saveRDS(polity_tidy, file = "../../../Data/Processed Data/polity_tidy.rds")
+  
   print("processed Polity data saved")
   
 }

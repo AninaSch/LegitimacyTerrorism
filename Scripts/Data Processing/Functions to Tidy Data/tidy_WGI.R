@@ -222,8 +222,17 @@ tidy_WGI <- function(path_loadoriginal, path_savetidy){
   WGI_tidy <- WGI_tidy %>%
     mutate_at(c("year", "accountability", "corruption", "effectiveness", 
                 "quality", "rule_of_law", "stability"), as.numeric)
+  
+  
+  # factoranalysis of  "accountability", "corruption", "effectiveness", "quality", "rule_of_law"
+  # https://community.rstudio.com/t/tidyverse-solutions-for-factor-analysis-principal-component-analysis/4504/2
+  
+  
+  
     
   saveRDS(WGI_tidy, file = path_savetidy)
+  # saveRDS(WGI_tidy, file = "../../../Data/Processed Data/WGI_tidy.rds")
+  
   print("processed WGI data saved")
   
 }

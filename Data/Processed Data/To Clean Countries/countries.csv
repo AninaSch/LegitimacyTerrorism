@@ -42,6 +42,7 @@ Cambodia (Kampuchea),Cambodia
 Cameroon,Cameroon
 Canada,Canada
 Cape Verde   ,Cape Verde   
+Cabo Verde,Cape Verde   
 Cayman Islands,Cayman Islands
 Central African Republic,Central African Republic
 Chad,Chad
@@ -52,6 +53,7 @@ China,China
 Colombia,Colombia
 Comoros,Comoros
 Congo Brazzaville,Congo Republic
+Congo-Brazzaville,Congo Republic
 Congo  ,Congo Republic
 "Congo, Rep.",Congo Republic
 Congo Kinshasa,Congo DRC
@@ -60,6 +62,7 @@ DR Congo (Zaire),Congo DRC
 "Congo, Dem. Rep.",Congo DRC
 Cook Islands,Cook Islands
 Cote D'Ivoire,Ivory Coast
+Cote d'Ivoire,Ivory Coast
 Côte d'Ivoire ,Ivory Coast
 Costa Rica,Costa Rica
 Croatia,Croatia
@@ -68,6 +71,7 @@ Cyprus,Cyprus
 Czech Republic,Czech Republic
 Czechoslovakia,Czechoslovakia
 Democratic Republic of the Congo,Congo DRC
+Dem. Rep. of Congo ,Congo DRC
 Denmark,Denmark
 Djibouti,Djibouti
 Dominica,Dominica
@@ -127,6 +131,7 @@ Ivory Coast,Ivory Coast
 Jamaica,Jamaica
 Japan,Japan
 "Jersey, Channel Islands  ",Jersey
+Channel Islands  ,Jersey
 Jordan,Jordan
 Kazakhstan,Kazakhstan
 Kenya,Kenya
@@ -187,10 +192,13 @@ Niger,Niger
 Nigeria,Nigeria
 Niue,Niue
 Korea North,North Korea
+"Korea, North",North Korea
 North Korea,North Korea
 "Korea, Dem. Rep.",North Korea
+"Korea, Dem. People’s Rep.",North Korea
 "Korea, Rep.",South Korea
 South Korea,South Korea
+"Korea, South",South Korea
 North Yemen,North Yemen
 Norway,Norway
 Oman,Oman
@@ -218,12 +226,14 @@ Rwanda,Rwanda
 Samoa,
 San Marino,San Marino
 São Tomé and Principe,São Tomé and Principe
+Sao Tome and Principe,São Tomé and Principe
 Saudi Arabia,Saudi Arabia
 Senegal,Senegal
 Serbia,Serbia
 Serbia (Yugoslavia),Serbia
 Serbia and Montenegro,Serbia-Montenegro
 Serbia-Montenegro,Serbia-Montenegro
+Serbia & Montenegro ,Serbia-Montenegro
 Seychelles,Seychelles
 Sierra Leone,Sierra Leone
 Singapore,Singapore
@@ -247,6 +257,7 @@ Saint Kitts and Nevis,St. Kitts and Nevis
 St. Lucia,St. Lucia
 St. Vincent and the Grenadines,St. Vincent and the Grenadines
 Sudan-North,Sudan
+Sudan (North) ,Sudan
 Sudan,Sudan
 Suriname,Suriname
 Swaziland,Swaziland

@@ -1,6 +1,12 @@
 
 # This script merges the processed data together to create a dataset ready for PANEL ANALYSIS.
 
+# duplicate Fragility & HIEF
+# https://www.datanovia.com/en/lessons/identify-and-remove-duplicate-data-in-r/
+# duplicated(), unique()
+# (duplicated(isTRUE(Fragility)))
+
+
 # --- 0. Setup
 
 library(tidyverse)
@@ -16,6 +22,10 @@ PENN <- readRDS("../../Data/Processed Data/PENN_tidy.rds")
 PRIO <- readRDS("../../Data/Processed Data/Prio_tidy.rds")
 WGI <- readRDS("../../Data/Processed Data/WGI_tidy.rds")
 WVS <- readRDS("../../Data/Processed Data/WVS_tidy_wave456.rds")
+Fragility <- readRDS("../../Data/Processed Data/Fragility_tidy.rds")
+HIEF <- readRDS("../../Data/Processed Data/HIEF_tidy.rds")
+WDI <- readRDS("../../Data/Processed Data/WDI_tidy.rds")
+Vdem <- readRDS("../../Data/Processed Data/Vdem_tidy.rds")
 
 # --- 2. Clean Countries Before Merging
 
@@ -26,6 +36,13 @@ PENN <- clean_countries(PENN, path_to_country_dictionary)
 PRIO <- clean_countries(PRIO, path_to_country_dictionary)
 WGI <- clean_countries(WGI, path_to_country_dictionary)
 WVS <- clean_countries(WVS, path_to_country_dictionary)
+
+Fragility <- clean_countries(Fragility, path_to_country_dictionary)
+WDI <- clean_countries(WDI, path_to_country_dictionary) # check conuntries labelling
+HIEF <- clean_countries(HIEF, path_to_country_dictionary)
+
+Vdem <- clean_countries(Vdem, path_to_country_dictionary)
+
 
 # --- 3. Merging Datasets Polity_Penn_Prio
 
@@ -44,24 +61,33 @@ GTD_polity_PENN_PRIO <- GTD_polity_PENN_PRIO %>%
   replace_na(list(type_of_conflict_1=0, type_of_conflict_2=0,
                   type_of_conflict_3=0, type_of_conflict_4=0, any_conflict=0))
 
-
 # --- then we merge WGI to GTD_polity_PENN_PRIO:
 GTD_polity_PENN_PRIO_WGI <- left_join(GTD_polity_PENN_PRIO, WGI, by = c("consolidated_country", "year"))
-
-# --- then we merge WVS to GTD_polity_PENN_PRIO_WVS:
-GTD_polity_PENN_PRIO_WGI_WVS <- left_join(GTD_polity_PENN_PRIO_WGI, WVS, by = c("consolidated_country"))
-
 # some duplicate were created, because in some datasets, some year-country combinations happen twice
 GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>% distinct()
 
+# --- then we merge WVS to GTD_polity_PENN_PRIO_WGI:
+GTD_polity_PENN_PRIO_WGI_WVS <- left_join(GTD_polity_PENN_PRIO_WGI, WVS, by = c("consolidated_country"))
 
-# take years after 2000: (quick dirty fix for the temporary countries):
-GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>%
-  filter(year > 1999)
+# # take years after 2000: (quick dirty fix for the temporary countries):
+# GTD_polity_PENN_PRIO_WGI <- GTD_polity_PENN_PRIO_WGI %>%
+#   filter(year > 1999)
+# GTD_polity_PENN_PRIO_WGI_WVS <- GTD_polity_PENN_PRIO_WGI_WVS %>%
+#   filter(year > 1999)
 
-GTD_polity_PENN_PRIO_WGI_WVS <- GTD_polity_PENN_PRIO_WGI_WVS %>%
-  filter(year > 1999)
 
+# --- then we merge Fragility to GTD_polity_PENN_PRIO_WGI_WVS:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility <- left_join(GTD_polity_PENN_PRIO_WGI_WVS, Fragility, by = c("consolidated_country", "year"))
+
+# --- then we merge WDI to GTD_polity_PENN_PRIO_WGI_WVS_Fragility:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility, WDI, by = c("consolidated_country", "year"))
+
+# --- then we merge HIEF to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI, HIEF, by = c("consolidated_country", "year"))
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF <- GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF %>% distinct()
+
+# --- then we merge Vdem to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF, Vdem, by = c("consolidated_country", "year"))
 
 
 # my_dataset <- GTD_polity # until we get our final dataset.
@@ -91,4 +117,6 @@ GTD_polity_PENN_PRIO_WGI_WVS <- GTD_polity_PENN_PRIO_WGI_WVS %>%
 # --- 5. Saving 
 saveRDS(GTD_polity_PENN_PRIO_WGI, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_2000.rds")
 saveRDS(GTD_polity_PENN_PRIO_WGI_WVS, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_2000.rds")
+saveRDS(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_2000.rds")
+saveRDS(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_2000.rds")
 
