@@ -1,0 +1,192 @@
+---
+title: "Check Data for TS"
+output: html_notebook
+---
+
+Aim: check quality of chosen variables for panel analysis (time series: TS).
+
+The notebook takes some time to run, because of the *facet_wrap* by country, so if you don't want to re-run code, just read the html!
+
+```{r settings}
+
+library(tidyverse)
+library(naniar)
+
+
+# variables of interest:
+vars = c('vdem_edcomp_thick', 'vdem_partip', 'vdem_corr', 'vdem_egal', 'fh_cl', 'fh_pr')
+
+# data set:
+ts <- readRDS("../../../Data/Data for Modelling/LEGTER_ts.rds")
+
+# select only columns of interest:
+ts <- ts %>%
+  select(year, 
+         consolidated_country,
+         one_of(vars)
+         )
+
+# glimpse(ts)
+ts
+```
+
+It seems that, by just quickly looking at the data, the _Varieties of Democracy (V-Dem)_ variables have a higher granularity and vary over the years, whereas the _Freedom of House (fh)_ vary less over the years. 
+
+
+## Check NAs
+
+Let's see if we have many NAs, and how they are distributued.  
+
+We have all years and countries and we miss a few combinations for the V-Dem and FH variables.  
+
+
+```{r vis_NA}
+
+# tmp <- na.omit(ts)
+
+vis_miss(ts)
+
+```
+
+Which countries are missing data? First we can explore all observations with missing values: 
+
+```{r obs_NA}
+
+ts[!complete.cases(ts), ]
+
+```
+
+And those are the countries with missing values. We have a few large countries in there (France, Pakistan, Malaysia, ...).
+
+**==> TO DO: check if correct that no V-Dem and FH data for France and Pakistan**
+
+```{r ctry _NA}
+
+ts[!complete.cases(ts), ]$consolidated_country %>% unique()
+
+```
+
+## Check Distributions
+
+Looking at the distribution of the variables of interest:
+
+```{r distr_fh}
+ts %>%
+  select(fh_cl, fh_pr) %>%
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_histogram(stat = "count") +
+  theme_minimal() + 
+  ggtitle("Distributions for Freedom's House Index variables")
+
+```
+
+
+```{r distr_vdem_bin}
+ts %>%
+  select(vdem_edcomp_thick, vdem_partip, vdem_corr, vdem_egal) %>%
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_histogram(stat = "bin", bins = 20) +
+  theme_minimal() + 
+  ggtitle("Distributions for V-Dem's variables, 20 bins")
+```
+
+
+```{r distr_vdem_density}
+ts %>%
+  select(vdem_edcomp_thick, vdem_partip, vdem_corr, vdem_egal) %>%
+  gather() %>% 
+  ggplot(aes(value)) +
+  facet_wrap(~ key, scales = "free") +
+  geom_density() +
+  theme_minimal() + 
+  ggtitle("Distributions for V-Dem's variables, density")
+```
+
+
+
+## Check Trends
+
+We want to look at the variability over time of the variables.
+
+### vdem_edcomp_thick
+
+```{r trends_vdem_edcomp_thick, fig.width = 10, fig.height = 15}
+ts %>%
+  ggplot(aes(x=year, y=vdem_edcomp_thick)) +
+  geom_line() +
+  theme_minimal() + 
+  theme(legend.position = "none") +
+  ggtitle("vdem_edcomp_thick: trends by country") +
+  facet_wrap(~ consolidated_country)
+
+```
+
+### vdem_partip
+
+```{r vdem_partip, fig.width = 10, fig.height = 15}
+ts %>%
+  ggplot(aes(x=year, y=vdem_partip)) +
+  geom_line() +
+  theme_minimal() + 
+  theme(legend.position = "none") +
+  ggtitle("vdem_partip: trends by country") +
+  facet_wrap(~ consolidated_country)
+```
+
+
+### vdem_corr
+
+```{r vdem_corr, fig.width = 10, fig.height = 15}
+ts %>%
+  ggplot(aes(x=year, y=vdem_corr)) +
+  geom_line() +
+  theme_minimal() + 
+  theme(legend.position = "none") +
+  ggtitle("vdem_corr: trends by country") +
+  facet_wrap(~ consolidated_country)
+```
+
+### vdem_egal
+
+```{r vdem_egal, fig.width = 10, fig.height = 15}
+ts %>%
+  ggplot(aes(x=year, y=vdem_egal)) +
+  geom_line() +
+  theme_minimal() + 
+  theme(legend.position = "none") +
+  ggtitle("vdem_egal: trends by country") +
+  facet_wrap(~ consolidated_country)
+```
+
+
+### fh_cl
+
+```{r fh_cl, fig.width = 10, fig.height = 15}
+ts %>%
+  ggplot(aes(x=year, y=fh_cl)) +
+  geom_line() +
+  theme_minimal() + 
+  theme(legend.position = "none") +
+  ggtitle("fh_cl: trends by country") +
+  facet_wrap(~ consolidated_country)
+```
+
+### fh_pr
+
+```{r fh_pr, fig.width = 10, fig.height = 15}
+ts %>%
+  ggplot(aes(x=year, y=fh_pr)) +
+  geom_line() +
+  theme_minimal() + 
+  theme(legend.position = "none") +
+  ggtitle("fh_pr: trends by country") +
+  facet_wrap(~ consolidated_country)
+```
+
+
+
+
