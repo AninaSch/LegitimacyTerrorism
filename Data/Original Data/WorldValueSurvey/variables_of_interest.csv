@@ -1,0 +1,9 @@
+trust_others,=,A165,#,Most people can be trusted,,,,ok
+general_trust_citizen,=,G007_01,#,Trust: Other people in country,,,,
+general_trust_people,=,G007_64,#,Trust: People in general,,,,
+importance_politics,=,A004,#,"Important in life: Politics 
+",,,,ok
+interest_politics1,=,E023,#,Interest in politics,,,,
+interest_politics2,=,E024,#,Interest in politics (ii),,,,
+follow_politics,=,E150,#,"How often follows politics in the news 
+",,,,

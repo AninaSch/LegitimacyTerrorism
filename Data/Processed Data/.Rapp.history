@@ -3,3 +3,4 @@ load("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Processed Data/W
 load("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Processed Data/WGI_tidy.rds")
 load("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Processed Data/GTD_tidy.rds")
 load("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Processed Data/WVS_tidy_wave456.rds")
+load("/Users/schwarze/Documents/GitHub/LegitimacyTerrorism/Data/Processed Data/IMF_tidy.rds")

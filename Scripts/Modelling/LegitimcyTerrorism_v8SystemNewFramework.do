@@ -17,10 +17,6 @@ sysdir set PERSONAL "../../../ados"
 * -> NO
 
 
-*** CHECK DATASETS
-* check corruption index
-* check data set Francois
-
 *** SYSTEM LEVEL LEGITIMACY
 * accountability
 * fairness
@@ -79,18 +75,37 @@ foreach v of var any_conflict durable exrec exconst polcomp polity2 {
 }
 gen lag1EFindex = EFindex[_n-1]
 
-foreach v of var fh_ep fh_ppp ideavt_presvt vdem_partip vdem_corr fh_feb fh_aor fh_rol fh_pair {
+*accountability
+foreach v of var wbgi_vae fh_pr fh_ipolity2 fh_ep fh_ppp fh_fog vdem_dl_delib  vdem_edcomp_thick vdem_partip cpds_vt ideavt_legvt ideavt_presvt {
 	gen lag1`v'= `v'[_n-1]
 }
 
-gen lag1cpds_vt = cpds_vt[_n-1]
+* efficiency
+foreach v of var wbgi_gee wbgi_cce bci_bci vdem_corr tax_revenue {
+	gen lag1`v'= `v'[_n-1]
+}
+
+*fairness (procedural)
+foreach v of var wbgi_rle fh_cl  fh_feb fh_aor fh_rol fh_pair  {
+	gen lag1`v'= `v'[_n-1]
+}
+
+*fairness (distributive)
+foreach v of var vdem_egal nonviolent_protests violent_protests politcal_relaxations {
+	gen lag1`v'= `v'[_n-1]
+}
 
 
-cpds_vt 
+foreach v of var wvs_trust wvs_polint wvs_imppol wvs_confpol wvs_confcs {
+	gen lag1`v'= `v'[_n-1]
+}
 
 *-------------- correlation matrix
 corr n_events legitimacy logGDPexp_capita logpop any_conflict durable mean_trust_others mean_importance_politics accountability corruption effectiveness quality rule_of_law
 corr n_events legitimacy logGDPexp_capita logpop lag1any_conflict durable mean_trust_others mean_importance_politics
+corr Êwbgi_cce wbgi_gee Êwbgi_pve Êwbgi_rle Êwbgi_vae 
+corr fh_pr fh_ipolity2 fh_ep fh_ppp fh_fog fh_cl 
+corr vdem_dl_delib  vdem_edcomp_thick vdem_partip vdem_corr vdem_egal
 
 *-------------- summary statistics
 generate y = uniform()
@@ -107,44 +122,69 @@ xtset consolidated_country year // Before using xtreg you need to set Stata to h
 // ÒcountryÓ represents the entities or panels (i) and ÒyearÓ represents the time variable (t)
 // strongly balanced)Ó refers to the fact that all countries have data for all years.
 
+*** ACCOUNTABILITY
+xtnbreg n_events lag1wbgi_vae lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
-* control for accountability fh_ep, fh_ppp , ideavt_presvt, vdem_partip
-xtnbreg n_events lag1fh_ep lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
-xtnbreg n_events lag1fh_ep lag1fh_ppp  lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+xtnbreg n_events lag1fh_pr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+
+xtnbreg n_events lag1fh_ipolity2 lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+
+xtnbreg n_events lag1vdem_edcomp_thick lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+xtnbreg n_events lag1vdem_partip lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+xtnbreg n_events lag1vdem_dl_delib   lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
 xtnbreg n_events lag1ideavt_presvt lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+xtnbreg n_events lag1ideavt_legvt lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
-xtnbreg n_events lag1vdem_partip lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+*** EFFICIENCY
+xtnbreg n_events lag1wbgi_gee lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+xtnbreg n_events lag1wbgi_cce lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
-xtnbreg n_events lag1cpds_vt lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
-
-
-* control for efficiency vdem_corr 
 xtnbreg n_events lag1vdem_corr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
-* control for fairness fh_feb, fh_aor, fh_rol, fh_pair 
-xtnbreg n_events lag1fh_rol lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
-
-xtnbreg n_events lag1fh_rol lag1fh_feb lag1fh_aor lag1fh_pair lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+xtnbreg n_events lag1tax_revenue lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
 
+*** FAIRNESS (PROCEDURAL)
+xtnbreg n_events lag1wbgi_rle lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
-* run models with separate legitimacy measures
-* accountability
-xtnbreg n_events lag1accountability lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable  i.year, fe irr 
-
-*fairness --> rule of law
-xtnbreg n_events lag1rule_of_law lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable  i.year, fe irr 
-xtnbreg n_events lag1corruption lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable  i.year, fe irr 
-
-*efficiency --> social efficiency? or political efficiency?
-xtnbreg n_events lag1effectiveness lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable  i.year, fe irr 
-xtnbreg n_events lag1quality lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable  i.year, fe irr 
+xtnbreg n_events lag1fh_cl lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
 
+*** FAIRNESS (DISTRIBUTIVE)
+xtnbreg n_events lag1vdem_egal lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+
+xtnbreg n_events lag1violent_protests lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
 
+*--------------  FIXED EFFECTS MODEL WITH DV TERRORISM INDEX
+*** accountability
+xtreg voh_gti lag1fh_pr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year, fe
 
+*** efficiency
+xtreg voh_gti lag1vdem_corr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year, fe 
+
+*** fairness (procedural)
+xtreg voh_gti lag1fh_cl lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year, fe  
+
+*** fairness (distributive)
+xtreg voh_gti lag1vdem_egal lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year, fe 
+
+
+*--------------  ADDITIONAL CONTROLS
+*** accountability
+xtnbreg n_events lag1fh_pr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year polleg, fe irr 
+xtnbreg n_events lag1fh_pr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year ecoleg, fe irr 
+xtnbreg n_events lag1fh_pr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year socleg, fe irr 
+
+*** efficiency
+xtnbreg n_events lag1vdem_corr lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+
+*** fairness (procedural)
+xtnbreg n_events lag1fh_cl lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
+
+*** fairness (distributive)
+xtnbreg n_events lag1vdem_egal lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year , fe irr 
 
 
 * check with polleg variable from systemic peace database
@@ -159,6 +199,12 @@ xtnbreg n_events lag1seceff lag1logGDPexp_capita lag1logpop lag1any_conflict lag
 
 xtnbreg n_events lag1ecoleg lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable  i.year, fe irr 
 xtnbreg n_events lag1ecoeff lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable  i.year, fe irr 
+
+
+*--------------  WORLD VALUE SURVEY
+xtnbreg n_events lag1wvs_trust lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year   , fe irr 
+xtnbreg n_events lag1wvs_polint lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year   , fe irr 
+xtnbreg n_events lag1wvs_confpol lag1logGDPexp_capita lag1logpop lag1any_conflict lag1durable i.year   , fe irr 
 
 
 
