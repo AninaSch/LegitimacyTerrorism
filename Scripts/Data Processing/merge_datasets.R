@@ -26,6 +26,16 @@ Fragility <- readRDS("../../Data/Processed Data/Fragility_tidy.rds")
 HIEF <- readRDS("../../Data/Processed Data/HIEF_tidy.rds")
 WDI <- readRDS("../../Data/Processed Data/WDI_tidy.rds")
 Vdem <- readRDS("../../Data/Processed Data/Vdem_tidy.rds")
+ELRF <- readRDS("../../Data/Processed Data/ELRF_tidy.rds")
+Gallup <- readRDS("../../Data/Processed Data/Gallup_tidy.rds")
+
+IMF  <- readRDS("../../Data/Processed Data/IMF_tidy.rds")
+WHIV  <- readRDS("../../Data/Processed Data/WHIV_tidy.rds")
+IGM  <- readRDS("../../Data/Processed Data/IGM_tidy.rds")
+QoG_ts  <- readRDS("../../Data/Processed Data/QoG_ts_tidy.rds")
+QoG_cs  <- readRDS("../../Data/Processed Data/QoG_cs_tidy.rds")
+
+
 
 # --- 2. Clean Countries Before Merging
 
@@ -42,6 +52,16 @@ WDI <- clean_countries(WDI, path_to_country_dictionary) # check conuntries label
 HIEF <- clean_countries(HIEF, path_to_country_dictionary)
 
 Vdem <- clean_countries(Vdem, path_to_country_dictionary)
+
+ELRF <- clean_countries(ELRF, path_to_country_dictionary)
+Gallup <- clean_countries(Gallup, path_to_country_dictionary)
+
+IMF <- clean_countries(IMF, path_to_country_dictionary)
+WHIV <- clean_countries(WHIV, path_to_country_dictionary)
+IGM <- clean_countries(IGM, path_to_country_dictionary)
+
+QoG_ts <- clean_countries(QoG_ts, path_to_country_dictionary)
+QoG_cs <- clean_countries(QoG_cs, path_to_country_dictionary)
 
 
 # --- 3. Merging Datasets Polity_Penn_Prio
@@ -86,8 +106,43 @@ GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI <- left_join(GTD_polity_PENN_PRIO_WGI
 GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI, HIEF, by = c("consolidated_country", "year"))
 GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF <- GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF %>% distinct()
 
-# --- then we merge Vdem to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem:
+# --- then we merge Vdem to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF:
 GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF, Vdem, by = c("consolidated_country", "year"))
+
+# --- then we merge ELRF to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem, ELRF, by = c("consolidated_country"))
+
+# --- then we merge Gallup to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF, Gallup, by = c("consolidated_country"))
+
+
+
+# --- then we merge IMF to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup:
+# year is character, it should be numeric for the join
+IMF <- IMF %>%
+  mutate(year=as.numeric(year), tax_revenue=as.numeric(tax_revenue))
+
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup, IMF, by = c("consolidated_country", "year"))
+
+
+# --- then we merge WHIV to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIV <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF, WHIV, by = c("consolidated_country", "year"))
+
+# --- then we merge IGM to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIV:
+GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIV_IGM <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIV, IGM, by = c("consolidated_country"))
+
+
+# --- then we merge QoG timeseries to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIF_IGM to build:
+LEGTER_ts_input <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIV_IGM, QoG_ts, by = c("consolidated_country", "year"))
+
+LEGTER_ts <- LEGTER_ts_input %>%
+  distinct(year, consolidated_country, .keep_all= TRUE)
+
+# --- then we merge QoG cross-sectional to GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIF_IGM to build:
+LEGTER_cs_input <- left_join(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_IMF_WHIV_IGM, QoG_cs, by = c("consolidated_country"))
+
+LEGTER_cs <- LEGTER_cs_input %>%
+  distinct(year, consolidated_country, .keep_all= TRUE)
 
 
 # my_dataset <- GTD_polity # until we get our final dataset.
@@ -119,4 +174,9 @@ saveRDS(GTD_polity_PENN_PRIO_WGI, file = "../../Data/Data for Modelling/GTD_poli
 saveRDS(GTD_polity_PENN_PRIO_WGI_WVS, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_2000.rds")
 saveRDS(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_2000.rds")
 saveRDS(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_2000.rds")
+saveRDS(GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup, file = "../../Data/Data for Modelling/GTD_polity_PENN_PRIO_WGI_WVS_Fragility_WDI_HIEF_Vdem_ELRF_Gallup_2000.rds")
+
+saveRDS(LEGTER_ts, file = "../../Data/Data for Modelling/LEGTER_ts.rds")
+saveRDS(LEGTER_cs, file = "../../Data/Data for Modelling/LEGTER_cs.rds")
+
 

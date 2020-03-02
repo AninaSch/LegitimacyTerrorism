@@ -22,14 +22,14 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   # table(GTD$attacktype1_txt) # table of occurrences. only for non-continuous data (typically factors)
   # table(GTD_tidy$nkill, useNA = "ifany") # use this option to show if they are NAs in the column.
   
-  # Selected, filtered and renamed data is saved as GTD_clean:
-  GTD_clean <- GTD %>% 
+  # Selected, filtered and renamed data is saved as GTD_select:
+  GTD_select <- GTD %>% 
     select(
       eventid, 
       year = iyear, 
       country = country_txt,
       nationality_location = INT_LOG, # nationality of perpetrator == location of attack
-      # nationality_nationality = INT_IDEO, # nationality of perpetrator == nationality of target
+      nationality_nationality = INT_IDEO, # nationality of perpetrator == nationality of target
       location_nationality = INT_MISC # location of attack == nationality of target
       # region = region_txt,
       # success, # unsure yet if we should keep only successful attacks or not.
@@ -52,35 +52,44 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
     ) %>% # we sort by country and year (aesthetic):
     arrange(country, year)
   
-  GTD_clean_events <- GTD_clean %>% # we sum the number of event by country and year:
+  # NOTE DEAL WITH MISSING VALUES
+  # nationality_location
+  # 0  -> nationality of perpetrator == location of attack
+  # 1  -> nationality of perpetrator NOT EQUAL location of attack
+  # -9 -> unkonwn
+  # nationality_nationality
+  # 0  -> nationality of perpetrator == nationality of target
+  # 1  -> nationality of perpetrator NOT EQUAL nationality of target
+  # -9 -> unkonwn 
+  # location_nationality
+  # 0  -> location of attack == nationality of target
+  # 1  -> location of attack NOT EQUAL nationality of target
+  # -9 -> unkonwn  
+  
+  GTD_clean_events <- GTD_select %>% # we sum the number of event by country and year:
     count(year, country, name = "n_events") %>%
     # group_by(year, country) %>%
     # summarise(n_events = sum(n, na.rm = TRUE)) %>%
     arrange(country, year)
   
-  GTD_clean_domesticperpetrator <- GTD_clean %>% 
+  GTD_clean_domesticperpetrator <- GTD_select %>% 
     filter(nationality_location == 0) %>%
     count(year, country, name = "n_domperp_events") %>%
     arrange(country, year)
   
-  GTD_clean_domestictarget <- GTD_clean %>% 
+  GTD_clean_domestictarget <- GTD_select %>% 
     filter(location_nationality == 0) %>%
     count(year, country, name = "n_domtarg_events") %>%
     arrange(country, year)
   
   # merge all 3 in one dataset:
+  
   GTD_clean <- left_join(GTD_clean_events, GTD_clean_domesticperpetrator)
   GTD_clean <- left_join(GTD_clean, GTD_clean_domestictarget)
-  
-  
+
   print("cleaning done")
   
 # GTD_clean$location_attack[GTD_clean$location_attack == "-9"] <- "1"
-  
-
-  
-    
-  
   
   # we have now a dataset from the GTD with country, year and region, with:
   #     - n_events: the sum of the number of terrorist events by year and country
@@ -114,8 +123,6 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
          country != "Sudan", country !="Serbia", country != "Serbia-Montenegro",
          country != "International")
   
-  
-  
   # We merge GTD_clean and GTD_tidy to get the number of events:
   # It is a left join, to get n_events only where and when there were events:
   GTD_tidy <- left_join(GTD_struct, GTD_clean, by = c("year", "country")) %>%
@@ -146,6 +153,9 @@ tidy_GTD <- function(path_loadoriginal, path_savetidy){
   print("saving processed data GTD done")
   
 }
+
+
+  
 
 
 

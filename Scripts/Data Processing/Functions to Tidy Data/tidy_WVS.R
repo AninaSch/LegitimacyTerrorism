@@ -55,6 +55,32 @@
 # -2:No answer
 # -1:Don´t know
 
+# A168	Do you think most people try to take advantage of you (two waves, wave 5 missing)
+# '1:Would take advantage
+# 2:Try to be fair
+# -5:Missing; Unknown
+# -4:Not asked in survey
+# -3:Not applicable
+# -2:No answer
+# -1:Don´t know
+
+# A168A Do you think most people try to take advantage of you (ten point scale) (two waves, wave 4 missing)
+# '1:Would take advantage
+# 2:2
+# 3:3
+# 4:4
+# 5:5
+# 6:6
+# 7:7
+# 8:8
+# 9:9
+# 10:Try to be fair
+# -5:Missing; Unknown
+# -4:Not asked in survey
+# -3:Not applicable
+# -2:No answer
+# -1:Don´t know
+
 # A004	Important in life: Politics :
 # 1:Very important
 # 2:Rather important
@@ -77,6 +103,71 @@
 # -2:No answer
 # -1:Don´t know
 
+# TO ADD
+
+# E124	"Respect for individual human rights nowadays 
+# '1:There is a lot of respect for individual human rights
+# 2:There is some respect
+# 3:There is not much respect
+# 4:There is no respect at all
+# -5:Missing; Unknown
+# -4:Not asked in survey
+# -3:Not applicable
+# -2:No answer
+# -1:Don´t know
+
+# 
+# E069_06	"Confidence: The Police 
+# '1:A great deal
+# 2:Quite a lot
+# 3:Not very much
+# 4:None at all
+# -5:Missing; Unknown
+# -4:Not asked in survey
+# -3:Not applicable
+# -2:No answer
+# -1:Don´t know
+# 
+# E069_08	Confidence: The Civil Services
+# '1:A great deal
+# 2:Quite a lot
+# 3:Not very much
+# 4:None at all
+# -5:Missing; Unknown
+# -4:Not asked in survey
+# -3:Not applicable
+# -2:No answer
+# -1:Don´t know
+# 
+# E110	"Satisfaction with the way democracy develops (only two waves, wave 5 and wave 6 missing)
+# '1:Very satisfied
+# 2:Rather satisfied
+# 3:Not very satisfied
+# 4:Not at all satisfied
+# -5:Missing; Unknown
+# -4:Not asked in survey
+# -3:Not applicable
+# -2:No answer
+# -1:Don´t know
+# 
+# E111	"Rate political system for governing country (only two waves, wave 5 and wave 6 missing)
+# V152 Where on this scale would you put the political system as it is today	
+# v163a Rate Political system today	 	
+# '1:Bad
+# 2:2
+# 3:3
+# 4:4
+# 5:5
+# 6:6
+# 7:7
+# 8:8
+# 9:9
+# 10:Very good
+# -5:Missing; Unknown
+# -4:Not asked in survey
+# -3:Not applicable
+# -2:No answer
+# -1:Don´t know
 
 # 
 # Theory: citizenship's trait (Weatherford 1992)
@@ -88,12 +179,10 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   
   print("This function has to be cleaned")
   
-  
   library(sjlabelled) # to get labels of labelled data
   library(Hmisc) # the data labels (variable names)
   library(dbplyr)
   library(tidyverse)
-  
   
   # read WVS Data
   print("importing WVS data... (1min) ")
@@ -115,21 +204,36 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
     select(
       country = S003_country,
       year = S020,
-      wave = S002,
-      trust_others	=	A165,	#	Most people can be trusted
+      wave = S002
+    ) %>%
+    select(
+       trust_others	=	A165,	#	Most people can be trusted
+       take_advantage = A168A, # people try to take advantage of you (only two questions)
       # general_trust_citizen	=	G007_01,	#	Trust: Other people in country
       # general_trust_people	=	G007_64,	#	Trust: People in general
       importance_politics	=	A004,	#	Important in life: Politics 
-      interest_politics1	=	E023	#	Interest in politics
-      # interest_politics2	=	E024,	#	Interest in politics (ii)
+      interest_politics	=	E023	#	Interest in politics
       # follow_politics	=	E150	#	How often follows politics in the news
+    ) %>%   
+    select(
+    respect_human_rights = E124, # Respect for individual human rights nowadays 
+    confidence_police = E069_06, # confidence into the police
+    confidence_civil_service = E069_08, # confidence in the civil system
+    democratic_development = E110,	# Satisfaction with the way democracy develop
+    evaluation_pol_system = E111	# Rate political system for governing country (only two questions)
     ) %>%
     filter(
       year >= 1970,
       # remove missing values that are coded with negative numbers:
       trust_others > 0,
+      take_advantage > 0,
       importance_politics > 0,
-      interest_politics1 > 0
+      interest_politics > 0,
+      respect_human_rights > 0, 
+      confidence_police > 0,
+      confidence_civil_service > 0,
+      democratic_development >0,
+      evaluation_pol_system > 0
     ) %>%
     arrange(country, year) %>%
     mutate(country = as.factor(country))  
@@ -138,12 +242,19 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
   # table(WVS_tidy$importance_politics, useNA="ifany")
   # table(WVS_tidy$interest_politics1, useNA="ifany")
 
+
 # recode variables so that higher values = better  
 
   WVS_tidy <-WVS_tidy  %>%
     mutate(trust_others_m=as.numeric(recode(trust_others, `1`="2", `2`="1"))) %>%
+    mutate(take_advantage_m=as.numeric(recode(take_advantage, `1`="2", `2`="2",`3`="3",`4`="4",`5`="5",`6`="6",`7`="7",`8`="8",`9`="9",`10`="10")))
     mutate(importance_politics_m=as.numeric(recode(importance_politics, `1`="4", `2`="3",`3`="2",`4`="1"))) %>%
-    mutate(interest_politics1_m=as.numeric(recode(interest_politics1, `1`="4", `2`="3",`3`="2",`4`="1"))) 
+    mutate(interest_politics_m=as.numeric(recode(interest_politics, `1`="4", `2`="3",`3`="2",`4`="1"))) %>%
+    mutate(respect_human_rights_m=as.numeric(recode(respect_human_rights, `1`="4", `2`="3",`3`="2",`4`="1"))) %>%
+    mutate(confidence_police_m=as.numeric(recode(confidence_police, `1`="4", `2`="3",`3`="2",`4`="1"))) %>%
+    mutate(confidence_civil_service_m=as.numeric(recode(confidence_civil_service, `1`="4", `2`="3",`3`="2",`4`="1"))) %>%
+    mutate(democratic_development_m=as.numeric(recode(democratic_development, `1`="4", `2`="3",`3`="2",`4`="1"))) %>%
+    mutate(evaluation_pol_system_m=as.numeric(recode(evaluation_pol_system, `1`="2", `2`="2",`3`="3",`4`="4",`5`="5",`6`="6",`7`="7",`8`="8",`9`="9",`10`="10"))) 
   
   # table(WVS_tidy$trust_others_m, useNA="ifany")
   # table(WVS_tidy$importance_politics_m, useNA="ifany")
@@ -165,18 +276,31 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
 # run this to see the levels and if there are missing values:
 # table(WVS_tidy$trust_others, useNA="ifany")
 # 
-# 
 
   WVS_tidy_wave456 <- WVS_tidy %>%
     filter(wave >= 4) %>%
     group_by(country) %>% # we average by individual !
     summarise(
       mean_trust_others = mean(trust_others_m, na.rm=TRUE),
+      mean_take_advantage_ = mean(take_advantage_m, na.rm=TRUE), 
       mean_importance_politics = mean(importance_politics_m, na.rm=TRUE),
-      mean_interest_politics = mean(interest_politics1_m, na.rm=TRUE),
+      mean_interest_politics = mean(interest_politics_m, na.rm=TRUE), 
+      mean_respect_human_rights = mean(respect_human_rights_m, na.rm=TRUE), 
+      mean_confidence_police = mean(confidence_police_m, na.rm=TRUE), 
+      mean_confidence_civil_service = mean(confidence_civil_service_m, na.rm=TRUE), 
+      mean_democratic_development = mean(democratic_development_m, na.rm=TRUE), 
+      mean_evaluation_pol_system = mean(evaluation_pol_system_m, na.rm=TRUE)
+      ) %>% 
+    summarise(
       std_trust_others = sd(trust_others_m, na.rm=TRUE),
+      std_take_advantage_ = sd(take_advantage_m, na.rm=TRUE), 
       std_importance_politics = sd(importance_politics_m, na.rm=TRUE),
-      std_interest_politics1 = sd(interest_politics1_m, na.rm=TRUE)
+      std_interest_politics1 = sd(interest_politics_m, na.rm=TRUE),
+      std_respect_human_rights = sd(respect_human_rights_m, na.rm=TRUE), 
+      std_confidence_police = sd(confidence_police_m, na.rm=TRUE), 
+      std_confidence_civil_service = sd(confidence_civil_service_m, na.rm=TRUE), 
+      std_democratic_development = sd(democratic_development_m, na.rm=TRUE), 
+      std_evaluation_pol_system = sd(evaluation_pol_system_m, na.rm=TRUE)
     ) %>%
     arrange()
     print("tidying done")
@@ -194,13 +318,13 @@ tidy_WVS <- function(path_loadoriginal, path_savetidy){
 
 # ----------------------------------------------------------------------------------------
 
-# AGGREGATE VARIABLES OVER ALL YEARS AT COUNTRY LEVEL
+# AGGREGATE VARIABLES OVER ALL YEARS AT COUNTRY LEVEL ??
 WVS_tidy_aggregate <- WVS_tidy %>%
   group_by(country, year) %>%
   summarise(
     mean_trust_others = mean(trust_others, na.rm=TRUE),
     mean_importance_politics = mean(importance_politics, na.rm=TRUE),
-    mean_interest_politics1 = mean(interest_politics1, na.rm=TRUE)
+    mean_interest_politics = mean(interest_politics, na.rm=TRUE)
   ) %>%
   arrange(country, year)
 # control:
@@ -217,8 +341,8 @@ ggplot(data=WVS_agg_subset, aes(x=year, y=mean_trust_others, group=country)) +
   geom_line() +
   geom_point()  + theme_bw()   
 
+# ----------------------------------------------------------------------------------------
 
-
-
+# BUILD COMBINED INDICATOR
 
 
